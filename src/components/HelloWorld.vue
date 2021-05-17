@@ -1,20 +1,31 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <b-container>
 
-    <div v-if="webId == null">
-      <b-form-select v-model="issuer" :options="issuers"></b-form-select>
+      <b-row>
+        <b-col>
+          <LocalBrowser />
+        </b-col>
 
-      <b-button  @click="login">Login</b-button>
-    </div>
-    <b-button v-else @click="logout">Logout</b-button>
+        <b-col>
+          <div v-if="webId == null">
+            <b-form-select v-model="issuer" :options="issuers"></b-form-select>
 
-    <div v-if="webId != null">
-      Name: {{ name }}<br>
-      WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+webId" target="_blank">{{ webId}}</a><br>
-      storage : {{ storage}}<br><br>
-      <Storage />
-    </div>
+            <b-button  @click="login">Login</b-button>
+          </div>
+          <b-button v-else @click="logout">Logout</b-button>
+
+          <div v-if="webId != null">
+            Name: {{ name }}<br>
+            WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+webId" target="_blank">{{ webId}}</a><br>
+            storage : {{ podStorage}}<br><br>
+            <PodStorage />
+          </div>
+        </b-col>
+
+      </b-row>
+    </b-container>
 
   </div>
 </template>
@@ -36,7 +47,8 @@ export default {
     msg: String
   },
   components :  {
-    'Storage' :  () => import ( '@/components/storage/Storage' ),
+    'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
+    'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
   },
   data(){
     return {
@@ -50,7 +62,7 @@ export default {
       ],
       issuer: null,
       webId: null,
-      storage: null,
+      podStorage: null,
       name: null
     }
   },
@@ -95,8 +107,8 @@ export default {
       if (!getDefaultSession().info.isLoggedIn) {
         console.log("not logged")
         this.webId = null
-        this.storage = null
-        this.$store.dispatch('setStorage', this.storage)
+        this.podStorage = null
+        this.$store.dispatch('setPodStorage', this.podStorage)
         //  await this.login()
       }else{
         console.log("webId", getDefaultSession().info.webId)
@@ -131,9 +143,9 @@ export default {
           // });
 
 
-          this.storage = getUrl(profile, WS.storage);
-          console.log("storage", this.storage)
-          this.$store.dispatch('setStorage', this.storage)
+          this.podStorage = getUrl(profile, WS.storage);
+          console.log("storage", this.podStorage)
+          this.$store.dispatch('setPodStorage', this.podStorage)
 
 
           // let documentLoaderType = 'xhr'

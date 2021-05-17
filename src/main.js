@@ -4,6 +4,11 @@ import './registerServiceWorker'
 import router from './router'
 import store from './store'
 
+import VueSocket from './plugins/vue-socket';
+
+// Load our IPFS plugin.
+Vue.use(VueSocket, {store: store});
+
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)

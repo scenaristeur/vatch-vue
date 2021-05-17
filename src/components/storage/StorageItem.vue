@@ -1,7 +1,7 @@
 <template>
   <b-list-group-item href="#" @click="loadThing(item)">
     <b>{{item.internal_url}}</b> /// {{type}}<br>
-    <small>  {{item}}</small>
+    <!-- <small>  {{item}}</small> -->
 
   </b-list-group-item>
 </template>
