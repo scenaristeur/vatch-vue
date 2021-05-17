@@ -1,0 +1,32 @@
+@prefix solid: <http://www.w3.org/ns/solid/terms#> .
+
+<#app> solid:oidcRegistration """{
+
+    # Mandatory values
+
+    "client_id" : "https://my-app.domain/profile#app",
+    "redirect_uris" : ["https://my-app.domain/callback"],
+    "scope" : "openid",
+    "grant_types" : ["authorization_code"],
+    "response_types" : ["code"],
+
+    # Optional values
+
+    "client_name" : "Vatch",
+    "client_uri" : "https://my-app.domain/",
+    "logo_uri" : "https://my-app.domain/logo.png",
+    "tos_uri" : "https://my-app.domain/tos.html",
+    "default_max_age" : 60000,
+}""" .
+
+
+/*
+<#app> solid:oidcRegistration """{
+    "client_id" : "https://raw.githubusercontent.com/inrupt/solid-client-authn-js/main/packages/browser/examples/single/bundle/client-app-profile.ttl#app",
+    "redirect_uris" : ["http://localhost:3113/"],
+    "client_name" : "Demo app",
+    "scope" : "openid webid",
+    "grant_types" : ["authorization_code"],
+    "response_types" : ["code"]
+    }""" .
+    */
