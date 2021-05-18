@@ -5,6 +5,7 @@
 
       <b-row>
         <b-col>
+          <Network />
           <LocalBrowser />
         </b-col>
 
@@ -47,6 +48,7 @@ export default {
     msg: String
   },
   components :  {
+    'Network' :  () => import ( '@/components/storage/Network' ),
     'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
   },

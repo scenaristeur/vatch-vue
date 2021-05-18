@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { /*getSolidDataset,*/ getThingAll,/* getStringNoLocale,*/ getUrlAll /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
+import { /*getSolidDataset, getThingAll, getStringNoLocale,*/ getUrlAll /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
 import { RDF /*, VCARD */} from "@inrupt/vocab-common-rdf";
 
 export default {
@@ -23,15 +23,15 @@ export default {
   },
   methods:{
     async init(){
-      const things = await getThingAll(
-        this.item,
-        this.item.internal_url
-      );
-      console.log("thingos", things)
+      // const things = await getThingAll(
+      //   this.item,
+      //   this.item.internal_url
+      // );
+    //  console.log("thingos", things)
 
       let types = getUrlAll(this.item, RDF.type);
-      console.log("types", types)
-      this.type = types.includes("http://www.w3.org/ns/ldp#BasicContainer") ? "Contanier" : "Resource"
+      //console.log("types", types)
+      this.type = types.includes("http://www.w3.org/ns/ldp#BasicContainer") ? "Container" : "Resource"
 
     },
     async loadThing(t){

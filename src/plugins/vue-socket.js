@@ -20,7 +20,14 @@ const plugin = {
     });
 
     socket.on('watcher event', function(ressources) {
-      console.log("Watcher event",ressources)
+
+    //  ressources.map(r => r.parts = r.path.split())
+        console.log("Watcher event",ressources)
+      store.commit("updateLocalResources", ressources)
+    });
+
+    socket.on('walker', function(ressources) {
+      console.log("Walker",ressources)
       store.commit("updateLocalResources", ressources)
     });
 
