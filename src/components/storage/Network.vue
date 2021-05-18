@@ -59,6 +59,7 @@ export default {
           }else{
             let n_id = evt.nodes[0]
           //  input.value = n_id
+          this.$store.commit('setInput', n_id)
           console.log("input.value", n_id)
             let n = this.data.nodes.get(n_id);
             console.log("selected",n)

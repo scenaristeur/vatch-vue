@@ -27,7 +27,7 @@
 
       </b-row>
     </b-container>
-
+<Input />
   </div>
 </template>
 
@@ -53,6 +53,7 @@ export default {
     // 'Network' :  () => import ( '@/components/storage/Network' ),
     'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
+      'Input' :  () => import ( '@/components/Input' ),
   },
   data(){
     return {

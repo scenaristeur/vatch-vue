@@ -21,10 +21,14 @@ export default new Vuex.Store({
     chatMessages : [],
     file: {},
     webId: null,
-    storage: null
+    storage: null,
+    input: ''
 
   },
   mutations: {
+    setInput(state, i){
+      state.input = i
+    },
     setPodStorage(state,s){
       state.podStorage = s
     },
