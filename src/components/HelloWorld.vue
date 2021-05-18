@@ -6,6 +6,7 @@
       <b-row>
         <b-col>
           <Network />
+          <Editor />
           <LocalBrowser />
         </b-col>
 
@@ -27,7 +28,7 @@
 
       </b-row>
     </b-container>
-<Input />
+    <Input />
   </div>
 </template>
 
@@ -53,7 +54,8 @@ export default {
     // 'Network' :  () => import ( '@/components/storage/Network' ),
     'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
-      'Input' :  () => import ( '@/components/Input' ),
+    'Input' :  () => import ( '@/components/Input' ),
+    'Editor' :  () => import ( '@/components/editor/Editor' ),
   },
   data(){
     return {
