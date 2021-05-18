@@ -41,6 +41,7 @@ import { WS /*, VCARD */} from "@inrupt/vocab-solid-common";
 // import * as solid from "@inrupt/vocab-solid-common"
 // console.log("vocabs",common, inrupt, solid)
 //import * as jsonld from 'jsonld';
+import Network from "@/components/storage/Network"
 
 export default {
   name: 'HelloWorld',
@@ -48,7 +49,8 @@ export default {
     msg: String
   },
   components :  {
-    'Network' :  () => import ( '@/components/storage/Network' ),
+    Network,
+    // 'Network' :  () => import ( '@/components/storage/Network' ),
     'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
   },

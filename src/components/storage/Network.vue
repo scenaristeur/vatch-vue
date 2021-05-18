@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="mynetwork" class="network">N/A</div>
-    <button @click="clusterByGroup">Cluster By group</button>
+    <b-button @click="clusterByGroup">Cluster By group</b-button>
 
   </div>
 </template>
@@ -75,8 +75,8 @@ export default {
         }
       })
 
-      // this.localResources = this.$store.state.localResources
-      // console.log(this.localResources)
+       this.localResources = this.$store.state.localResources
+       console.log(this.localResources)
 
     },
     methods:{
