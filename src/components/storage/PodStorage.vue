@@ -1,6 +1,6 @@
 <template>
   <div>
-    PodStorage {{ podStorage }}
+    <h3>PodStorage</h3>{{ podStorage }}
     {{ things.length}}
     <b-list-group>
       <b-list-group-item href="#" variant="success" @click="loadRoot()">{{podStorage}}</b-list-group-item>
