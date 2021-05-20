@@ -65,7 +65,7 @@ export default {
             console.log("selected",n)
             console.log("socket",this.$socket)
             if (n.type == 'file'){
-              this.$socket.emit('read file', n.id);
+              this.$socket.emit('read file', {path: n.id});
               n.shape = "ellipse"
               this.data.nodes.update(n)
             }else if (n.type == "folder"){
@@ -166,7 +166,7 @@ export default {
         }])
         this.linkContainer(item)
         if (label.startsWith('#')){
-          this.$socket.emit('read file', item.path);
+          this.$socket.emit('read file', {path: item.path});
         }
 
       },

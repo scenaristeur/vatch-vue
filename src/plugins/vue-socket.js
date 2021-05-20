@@ -24,8 +24,8 @@ const plugin = {
 
     socket.on('watcher event', function(ressources) {
 
-    //  ressources.map(r => r.parts = r.path.split())
-        console.log("Watcher event",ressources)
+      //  ressources.map(r => r.parts = r.path.split())
+      console.log("Watcher event",ressources)
       store.commit("vatch/updateLocalResources", ressources)
     });
 
@@ -35,8 +35,13 @@ const plugin = {
     });
 
     socket.on('cat file', function(file) {
-      console.log("TODO PROCESSFILE cat file", file)
-      store.commit("vatch/setFile", file)
+      if(file.callback != undefined){
+        store.dispatch(file.callback, file)
+      }else{
+        console.log("TODO PROCESSFILE cat file", file)
+        store.commit("vatch/setFile", file)
+      }
+
     });
 
     socket.on('chat message', function(msg) {
@@ -50,8 +55,6 @@ const plugin = {
     socket.on('disconnect', () => {
       store.commit("vatch/setUser", null)
     });
-
-
 
   },
 }

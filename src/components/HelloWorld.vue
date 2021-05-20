@@ -13,24 +13,22 @@
         <b-col>
           <Login />
           <!-- <div v-if="webId == null">
-            <b-form-select v-model="issuer" :options="issuers"></b-form-select>
+          <b-form-select v-model="issuer" :options="issuers"></b-form-select>
 
-            <b-button  @click="login">Login</b-button>
-          </div>
-          <b-button v-else @click="logout">Logout</b-button> -->
+          <b-button  @click="login">Login</b-button>
+        </div>
+        <b-button v-else @click="logout">Logout</b-button> -->
 
-          <div v-if="webId != null">
-            Name: {{ name }}<br>
-            WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+webId" target="_blank">{{ webId}}</a><br>
-            storage : {{ podStorage}}<br><br>
-            <PodStorage />
-          </div>
-        </b-col>
 
-      </b-row>
-    </b-container>
-    <Input />
-  </div>
+
+        <PodStorage />
+
+      </b-col>
+
+    </b-row>
+  </b-container>
+  <Input />
+</div>
 </template>
 
 <script>
@@ -55,50 +53,24 @@ export default {
     'Input' :  () => import ( '@/components/Input' ),
     'Editor' :  () => import ( '@/components/editor/Editor' ),
     'Login': () => import('@/components/solid/Login')
-  },
-  data(){
-    return {
-
-      webId: null,
-      podStorage: null,
-      name: null
-    }
-  },
-
-  watch:{
-    session(){
-      console.log("SESSION", this.session)
-    }
-  },
-  // computed: {
-  //   session(){
-  //     return getDefaultSession()
-  //   }
-  // },
-  methods:{
-
-
-
-
-
-    }
   }
-  </script>
+}
+</script>
 
-  <!-- Add "scoped" attribute to limit CSS to this component only -->
-  <style scoped>
-  h3 {
-    margin: 40px 0 0;
-  }
-  ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  li {
-    display: inline-block;
-    margin: 0 10px;
-  }
-  a {
-    color: #42b983;
-  }
-  </style>
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+h3 {
+  margin: 40px 0 0;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  display: inline-block;
+  margin: 0 10px;
+}
+a {
+  color: #42b983;
+}
+</style>

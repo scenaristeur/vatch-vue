@@ -3,7 +3,7 @@ import { getSolidDataset, getThingAll,
   isRawData,
   getContentType,
   saveFileInContainer,
-  getSourceUrl, deleteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
+  getSourceUrl, deleteFile, overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { handleIncomingRedirect, login, fetch, getDefaultSession, onSessionRestore,/* getSessionIdFromStorageAll,*/ /*getSessionFromStorage */ } from '@inrupt/solid-client-authn-browser'
   import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { FOAF /*, VCARD */} from "@inrupt/vocab-common-rdf";
@@ -12,19 +12,16 @@ import { getSolidDataset, getThingAll,
   const state = () => ({
     session: null,
     pod: null,
+    currentRemoteUrl: "",
+    things: [],
   })
 
   const actions = {
     async checkSessions({commit, dispatch}, params){
-      console.log(params)
-
       await handleIncomingRedirect({restorePreviousSession : params.restore}).then((info) => {
-        console.log(`Logged in with WebID [${info.webId}]`)
         console.log(info)
       })
-
       let session = getDefaultSession()
-      console.log(session)
       onSessionRestore((url) => {
         console.log("restore",url)
       });
@@ -32,34 +29,77 @@ import { getSolidDataset, getThingAll,
       dispatch('getPodInfos', session)
     },
 
-    async uploadLocalToPod(context,params){
-
-      console.log(params)
-
-      // import { overwriteFile } from "@inrupt/solid-client";
-      //
-      // const savedFile = await overwriteFile(
-      //   "https://example.com/some/new/file",
-      //   new Blob(["This is a plain piece of text"], { type: "plain/text" })
-      //   // Or in Node:
-      //   // Buffer.from("This is a plain piece of text", "utf8"), { type: "plain/text" })
-      // );
-      // console.log("File saved!");
-
-
-      const savedFile = await saveFileInContainer(
-        params.dest,
-        new Blob(["This is a plain piece of text"], { type: "plain/text" }),
-        { slug: "new-file", fetch: fetch }
-      );
-
-      console.log(`File saved at ${getSourceUrl(savedFile)}`);
+    async login(context, issuer) {
+      await login({
+        oidcIssuer: issuer,
+        redirectUrl: window.location.href,
+        clientName: "Vatch",
+      });
     },
+
+    async logout(context, params){
+      let session = getDefaultSession()
+      console.log(params)
+      await session.logout()
+      context.commit('setSession',session)
+      context.commit('setPod', {})
+    },
+
+    async getPodInfos(context, session){
+      let pod = {}
+      pod.logged = session.info.isLoggedIn
+      if (pod.logged) {
+        pod.webId = session.info.webId
+        const myDataset = await getSolidDataset( pod.webId, { fetch: fetch });
+        pod.profile = getThing( myDataset, pod.webId );
+        pod.name = getStringNoLocale(pod.profile, FOAF.name);
+        pod.acquaintances = getUrlAll(pod.profile, FOAF.knows);
+        pod.storage = getUrl(pod.profile, WS.storage);
+        context.commit('setPod', pod)
+        if (pod.storage != null){
+          context.dispatch('setCurrentThingUrl', pod.storage)
+        }
+      }else{
+        context.commit('setPod', null)
+        context.commit('setThings', [])
+      }
+    },
+
+    async uploadLocalToPod(context,params){
+      console.log(params)
+      let slug = params.parts.pop()
+      let type = params.type && params.type.mime || "plain/text"
+      let distIsDirectory = params.dest.endsWith('/')
+      let srcIsDirectory = params.event == "addDir"
+
+      if (srcIsDirectory){
+        console.info("todo src is directory")
+      }else{
+
+        if(distIsDirectory){
+          const savedFile = await saveFileInContainer(
+            params.dest,
+            new Blob([params.content], { type: type }),
+            { slug: slug, fetch: fetch }
+          );
+
+          console.log(`File saved at ${getSourceUrl(savedFile)}`);
+        }else{
+
+          const savedFile = await overwriteFile(
+            params.dest,
+            new Blob([params.content], { type: type })
+            // Or in Node:
+            // Buffer.from("This is a plain piece of text", "utf8"), { type: "plain/text" })
+          );
+          console.log("File saved!", savedFile);
+        }
+
+      }
+      context.dispatch('setCurrentThingUrl', params.dest)
+    },
+
     async setCurrentThingUrl(context, url){
-
-
-
-
       const file = await getFile(
         url
       );
@@ -68,9 +108,6 @@ import { getSolidDataset, getThingAll,
         `Fetched a ${getContentType(file)} file from ${getSourceUrl(file)}.`
       );
       console.log(`The file is ${isRawData(file) ? "not " : ""}a dataset.`);
-
-
-
 
       context.commit('setCurrentRemoteUrl',url)
       const myDataset = await getSolidDataset(
@@ -82,21 +119,7 @@ import { getSolidDataset, getThingAll,
           myDataset,
           url
         );
-        console.log("Things", things)
-        //  this.things = things
         context.commit('setThings',things)
-        // let documentLoaderType = 'xhr'
-        // await jsonld.useDocumentLoader(documentLoaderType/*, options*/);
-        // this.doc = await jsonld.documentLoader(this.storage, function(err) {
-        //   if(err) {
-        //     alert(err)
-        //   }
-        // })
-        // this.doc.jsonld = JSON.parse(this.doc.document)
-        //
-        // console.log(this.doc)
-        //  }
-
       },
       async deleteOnPod(context, params){
         console.log(params)
@@ -106,51 +129,27 @@ import { getSolidDataset, getThingAll,
         console.log("File deleted !");
       },
 
-      async login(context, issuer) {
-          await login({
-          oidcIssuer: issuer,
-          redirectUrl: window.location.href,
-          clientName: "Vatch",
-        });
+
+    }
+
+    const mutations = {
+      setPod(state,p){
+        state.pod = p
       },
-
-      async logout(context, params){
-        let session = getDefaultSession()
-        console.log(params)
-        await session.logout()
-        context.commit('setSession',session)
-        context.commit('setPod', {})
+      setSession(state, s){
+        state.session = s
       },
+      setCurrentRemoteUrl(state, url){
+        state.currentRemoteUrl = url
+      },
+      setThings(state, things){
+        state.things = things
+      },
+    }
 
-      async getPodInfos(context, session){
-        let pod = {}
-        pod.logged = session.info.isLoggedIn
-        if (pod.logged) {
-          pod.webId = session.info.webId
-          const myDataset = await getSolidDataset( pod.webId, { fetch: fetch });
-            pod.profile = getThing( myDataset, pod.webId );
-            pod.name = getStringNoLocale(pod.profile, FOAF.name);
-            pod.acquaintances = getUrlAll(pod.profile, FOAF.knows);
-            pod.storage = getUrl(pod.profile, WS.storage);
-          }
-          context.commit('setPod', pod)
-        },
-      }
-
-      const mutations = {
-        setPod(state,p){
-          console.log(p)
-          state.pod = p
-        },
-        setSession(state, s){
-          console.log(s)
-          state.session = s
-        },
-      }
-
-      export default {
-        namespaced: true,
-        state,
-        actions,
-        mutations
-      }
+    export default {
+      namespaced: true,
+      state,
+      actions,
+      mutations
+    }

@@ -1,14 +1,18 @@
 <template>
-  <div>
-    <h3>PodStorage</h3>{{ podStorage }}
-    {{ things.length}}
+  <div v-if="pod != null">
+    <h3>PodStorage</h3>
+    Name: {{ pod.name }}<br>
+    WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+pod.webId" target="_blank">{{ pod.webId}}</a><br>
+    storage : {{ pod.storage}}   {{ things.length}}<br><br>
+
+
 
 
     <!-- <Toolbar environnement="pod" /> -->
 
 
     <b-list-group @contextmenu.prevent="$refs.ctxMenu.open">
-      <b-list-group-item href="#" variant="success" @click="loadRoot()">{{podStorage}}</b-list-group-item>
+      <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
 
       <StorageItem v-for="thing of things" :key="thing.internal_url"  :item="thing" />
     </b-list-group>
@@ -42,32 +46,33 @@ export default {
     }
   },
   created(){
-    this.things = this.$store.state.things
+    this.pod = this.$store.state.solid.pod
+    this.things = this.$store.state.solid.things
     console.log("things", this.things)
   },
   methods:{
     async loadRoot(){
-      this.$store.dispatch('setCurrentThingUrl', this.podStorage)
+      this.$store.dispatch('solid/setCurrentThingUrl', this.pod.storage)
     },
     doSomething(e){
       console.log(e)
     }
   },
   watch:{
-    podStorage(){
-      console.log("Pod Storage", this.podStorage)
+    pod(){
+      console.log("Pod", this.pod)
     },
     things(){
       console.log("Watch things", this.things)
     }
   },
   computed:{
-    podStorage:{
-      get () { return this.$store.state.podStorage},
+    pod:{
+      get () { return this.$store.state.solid.pod},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
     things:{
-      get () { return this.$store.state.things},
+      get () { return this.$store.state.solid.things},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
   }

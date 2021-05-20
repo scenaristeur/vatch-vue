@@ -1,7 +1,7 @@
 const state = () => ({
   //pod
 //  podStorage : null,
-//  things: [],
+
   //Local
   pathsep: '/', //  ... / for linux, \\ for Windows
   users: [],
@@ -14,17 +14,11 @@ const state = () => ({
 //  webId: null,
   storage: null,
   input: '',
-//  currentRemoteUrl: ""
+
 })
 
 const actions = {
-  setPodStorage(context,s){
-    context.commit('setPodStorage',s)
-    if (s != null){
-      context.dispatch('setCurrentThingUrl', s)
-    }
 
-  },
 }
 
 const mutations = {
@@ -34,10 +28,7 @@ const mutations = {
   setPodStorage(state,s){
     state.podStorage = s
   },
-  setThings(state, things){
-    console.log("setThings", things)
-    state.things = things
-  },
+
   setUser(state, u){
     console.log(u)
     state.user = u
@@ -58,9 +49,7 @@ const mutations = {
   setFile(state, f){
     state.file = f
   },
-  setCurrentRemoteUrl(state, url){
-    state.currentRemoteUrl = url
-  }
+
 }
 
 export default {

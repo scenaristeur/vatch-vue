@@ -43,7 +43,7 @@ export default {
       console.log(t)
       // this.currentThing = t.internal_url
       // await this.load()
-      this.$store.dispatch('setCurrentThingUrl', t.internal_url)
+      this.$store.dispatch('solid/setCurrentThingUrl', t.internal_url)
     },
   },
   watch:{

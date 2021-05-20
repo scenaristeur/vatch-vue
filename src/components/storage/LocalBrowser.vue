@@ -6,8 +6,13 @@
     <!-- <Toolbar environnement="local" /> -->
 
     <b-list-group v-if="localResources.length > 0">
-      <b-list-group-item href="#" v-for="(lr, i) in localResources" :key="i" @contextmenu.prevent="openContext(lr)">
-        {{lr}}
+      <b-list-group-item href="#" v-for="(lr, i) in localResources" :key="i" @contextmenu.prevent="openContext(lr)" class="d-flex">
+        <div class="mr-3">
+          <!--  why mr-3 does not work ? -->
+        <b-icon v-if="lr.event=='addDir'" icon="folder-fill" variant="warning"></b-icon>
+        <b-icon v-else icon="file-earmark-richtext" variant="info"></b-icon>
+        </div>
+        {{lr.path}}
       </b-list-group-item>
 
 
@@ -78,17 +83,15 @@ export default {
       this.$refs.ctxMenuItem.open()
     },
     doSomething(e){
-      let params = {}
-      switch (e) {
+        switch (e) {
         case 'upload':
         console.log("upload", this.lr.path, this.currentRemoteUrl)
-         params = {src: this.lr, dest: this.currentRemoteUrl}
-        this.$store.dispatch('vatch/uploadLocalToPod', params)
+        this.lr.dest= this.currentRemoteUrl
+        this.lr.callback = 'solid/uploadLocalToPod'
+        this.$socket.emit('read file', this.lr);
         break;
         default:
-
       }
-
 
     }
   },
@@ -99,7 +102,7 @@ export default {
 
     },
     currentRemoteUrl:{
-      get () { return this.$store.state.vatch.currentRemoteUrl},
+      get () { return this.$store.state.solid.currentRemoteUrl},
       set (/*value*/) { /*this.updateTodo(value)*/ }
 
     },
