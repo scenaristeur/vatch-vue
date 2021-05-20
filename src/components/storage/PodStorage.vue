@@ -11,19 +11,13 @@
     <!-- <Toolbar environnement="pod" /> -->
 
 
-    <b-list-group @contextmenu.prevent="$refs.ctxMenu.open">
+    <b-list-group >
       <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
 
-      <StorageItem v-for="thing of things" :key="thing.internal_url"  :item="thing" />
+      <StorageItem v-for="thing of things" :key="thing.internal_url"  :item="thing"  />
     </b-list-group>
 
-    <context-menu id="context-menu" ref="ctxMenu">
-      <b-list-group>
-        <b-list-group-item  href="#" @click="doSomething('1')">option 1 P</b-list-group-item>
-        <b-list-group-item  href="#" @click="doSomething('2')">option 2</b-list-group-item>
-        <b-list-group-item  href="#" @click="doSomething('3')">option 3</b-list-group-item>
-      </b-list-group>
-    </context-menu>
+
 
   </div>
 </template>
@@ -38,7 +32,7 @@ export default {
   components :  {
     'StorageItem' :  () => import ( '@/components/storage/StorageItem' ),
     // 'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
-    'contextMenu' : () => import('vue-context-menu'),
+  //  'contextMenu' : () => import('vue-context-menu'),
   },
   data(){
     return {
@@ -54,9 +48,7 @@ export default {
     async loadRoot(){
       this.$store.dispatch('solid/setCurrentThingUrl', this.pod.storage)
     },
-    doSomething(e){
-      console.log(e)
-    }
+
   },
   watch:{
     pod(){

@@ -121,12 +121,13 @@ import { getSolidDataset, getThingAll,
         );
         context.commit('setThings',things)
       },
-      async deleteOnPod(context, params){
-        console.log(params)
+      async deleteOnPod(context, url){
         await deleteFile(
-          "https://example.com/some/boring/file", { fetch: fetch }
+          url, { fetch: fetch }
         );
-        console.log("File deleted !");
+        console.log("File deleted !",url);
+        let parent = url.slice(0, url.lastIndexOf('/'));
+        context.dispatch('setCurrentThingUrl', parent)
       },
 
 
