@@ -59,7 +59,7 @@ export default {
           }else{
             let n_id = evt.nodes[0]
           //  input.value = n_id
-          this.$store.commit('setInput', n_id)
+          this.$store.commit('vatch/setInput', n_id)
           console.log("input.value", n_id)
             let n = this.data.nodes.get(n_id);
             console.log("selected",n)
@@ -76,7 +76,7 @@ export default {
         }
       })
 
-       this.localResources = this.$store.state.localResources
+       this.localResources = this.$store.state.vatch.localResources
        console.log(this.localResources)
 
     },
@@ -230,11 +230,11 @@ export default {
     },
     computed:{
       pathsep:{
-        get () { return this.$store.state.pathsep},
+        get () { return this.$store.state.vatch.pathsep},
         set (/*value*/) { /*this.updateTodo(value)*/ }
       },
       localResources:{
-        get () { return this.$store.state.localResources},
+        get () { return this.$store.state.vatch.localResources},
         set (/*value*/) { /*this.updateTodo(value)*/ }
       }
     }

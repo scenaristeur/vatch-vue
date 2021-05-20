@@ -67,7 +67,13 @@ import { getSolidDataset, getThingAll,
 
     async uploadLocalToPod(context,params){
       console.log(params)
-      let slug = params.parts.pop()
+
+      if(params.dest == undefined){
+        alert ("Please select a destination")
+        return
+      }
+
+
       let type = params.type && params.type.mime || "plain/text"
       let distIsDirectory = params.dest.endsWith('/')
       let srcIsDirectory = params.event == "addDir"
@@ -77,6 +83,8 @@ import { getSolidDataset, getThingAll,
       }else{
 
         if(distIsDirectory){
+          params.parts == undefined ? params.parts = params.path.split(context.rootState.vatch.pathsep) : ""
+          let slug = encodeURIComponent(params.parts.pop())
           const savedFile = await saveFileInContainer(
             params.dest,
             new Blob([params.content], { type: type }),
@@ -84,25 +92,31 @@ import { getSolidDataset, getThingAll,
           );
 
           console.log(`File saved at ${getSourceUrl(savedFile)}`);
+          context.dispatch('setCurrentThingUrl', params.dest)
         }else{
 
-          const savedFile = await overwriteFile(
-            params.dest,
-            new Blob([params.content], { type: type })
-            // Or in Node:
-            // Buffer.from("This is a plain piece of text", "utf8"), { type: "plain/text" })
-          );
-          console.log("File saved!", savedFile);
+          let answer = confirm("Are you sure you want to replace "+params.dest);
+          if (answer == true)
+          {
+            const savedFile = await overwriteFile(
+              params.dest,
+              new Blob([params.content], { type: type }),
+              { fetch: fetch }
+              // Or in Node:
+              // Buffer.from("This is a plain piece of text", "utf8"), { type: "plain/text" })
+            );
+            console.log("File saved!", savedFile);
+          }
+
+
         }
 
       }
-      context.dispatch('setCurrentThingUrl', params.dest)
+
     },
 
     async setCurrentThingUrl(context, url){
-      const file = await getFile(
-        url
-      );
+      const file = await getFile(url, {fetch: fetch});
       // file is a Blob (see https://developer.mozilla.org/docs/Web/API/Blob)
       console.log(
         `Fetched a ${getContentType(file)} file from ${getSourceUrl(file)}.`
@@ -110,47 +124,63 @@ import { getSolidDataset, getThingAll,
       console.log(`The file is ${isRawData(file) ? "not " : ""}a dataset.`);
 
       context.commit('setCurrentRemoteUrl',url)
-      const myDataset = await getSolidDataset(
-        url, {
-          fetch: fetch
+
+      if(isRawData(file)){
+        console.log("todo raw data", file)
+        var reader = new FileReader();
+        reader.addEventListener("loadend", function() {
+          console.log(reader)
+          //  console.log(reader.result)
+          context.commit('vatch/setFile', {
+            path: getSourceUrl(file),
+            content : reader.result,
+            type:{mime: getContentType(file)}
+          }, { root: true })
+          // reader.result contient le contenu du
+          // blob sous la forme d'un tableau typé
         });
+        reader.readAsText(file);
+      }else{
+        const myDataset = await getSolidDataset( url, {fetch: fetch});
         console.log(myDataset)
         const things = await getThingAll(
           myDataset,
           url
         );
         context.commit('setThings',things)
-      },
-      async deleteOnPod(context, url){
-        await deleteFile(
-          url, { fetch: fetch }
-        );
-        console.log("File deleted !",url);
-        let parent = url.slice(0, url.lastIndexOf('/'));
-        context.dispatch('setCurrentThingUrl', parent)
-      },
+      }
+    },
+    async deleteOnPod(context, url){
+      await deleteFile(
+        url, { fetch: fetch }
+      );
+      console.log("File deleted !",url);
+      let parent = url.slice(0, url.lastIndexOf('/'))+'/';
+      console.log("parent",parent)
+      context.dispatch('setCurrentThingUrl', parent)
+    },
 
 
-    }
+  }
 
-    const mutations = {
-      setPod(state,p){
-        state.pod = p
-      },
-      setSession(state, s){
-        state.session = s
-      },
-      setCurrentRemoteUrl(state, url){
-        state.currentRemoteUrl = url
-      },
-      setThings(state, things){
-        state.things = things
-      },
-    }
+  const mutations = {
+    setPod(state,p){
+      state.pod = p
+    },
+    setSession(state, s){
+      state.session = s
+    },
+    setCurrentRemoteUrl(state, url){
+      state.currentRemoteUrl = url
+    },
+    setThings(state, things){
+      state.things = things
+    },
+  }
 
-    export default {
-      namespaced: true,
-      state,
-      actions,
-      mutations
-    }
+  export default {
+    namespaced: true,
+    state,
+    actions,
+    mutations
+  }

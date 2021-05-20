@@ -26,7 +26,12 @@
     methods: {
       save(){
         this.$bvModal.hide('bv-modal-exditor')
-        this.$socket.emit('write file', {path: this.path, content: this.content});
+        if(this.path.startsWith(this.pod.storage)){
+          this.$store.dispatch('solid/uploadLocalToPod', {dest: this.path, content: this.content})
+        }else{
+          this.$socket.emit('write file', {path: this.path, content: this.content});
+        }
+
         this.src = ""
         this.path = ""
         this.content = ""
@@ -60,13 +65,17 @@
     },
     watch:{
       file(){
-      //  console.log(this.file)
+        //  console.log(this.file)
         this.processFile(this.file)
       }
     },
     computed:{
       file:{
-        get () { return this.$store.state.file},
+        get () { return this.$store.state.vatch.file},
+        set (/*value*/) { /*this.updateTodo(value)*/ }
+      },
+      pod:{
+        get () { return this.$store.state.solid.pod},
         set (/*value*/) { /*this.updateTodo(value)*/ }
       },
     }

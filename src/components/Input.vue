@@ -23,7 +23,7 @@ mounted(){
 },
 computed:{
   input:{
-    get () { return this.$store.state.input},
+    get () { return this.$store.state.vatch.input},
     set (/*value*/) { /*this.updateTodo(value)*/ }
   },
 }

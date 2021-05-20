@@ -5,7 +5,6 @@ import { io } from "socket.io-client";
 
 const plugin = {
   install(Vue, opts = {}) {
-    console.log("opts",opts)
     let store = opts.store
     // vatch-vue hosted on github can access your locahost storage
     //let socket = Vue.prototype.$socket = io('http://localhost:3000');

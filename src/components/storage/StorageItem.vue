@@ -5,7 +5,7 @@
     <b-icon v-if="type=='Container'" icon="folder-fill" variant="warning"></b-icon>
     <b-icon v-else icon="file-earmark-richtext" variant="info"></b-icon>
     </div>
-  <span>  {{item.internal_url}}</span>
+  <span>  {{decodeURIComponent(item.internal_url)}}</span>
     <!-- <small>  {{item}}</small> -->
 
     <context-menu id="context-menu" ref="ctxMenu">
