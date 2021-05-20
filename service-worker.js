@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/vatch-vue/precache-manifest.e449c0b90c9614d097d7cd2fcad2641c.js"
+  "/vatch-vue/precache-manifest.8b5e328ceeb6ba31a49fcacdfb79170b.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "vatch-vue"});
