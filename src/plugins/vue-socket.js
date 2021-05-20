@@ -7,7 +7,10 @@ const plugin = {
   install(Vue, opts = {}) {
     console.log("opts",opts)
     let store = opts.store
-    let socket = Vue.prototype.$socket = io('http://localhost:3000');
+    // vatch-vue hosted on github can access your locahost storage
+    //let socket = Vue.prototype.$socket = io('http://localhost:3000');
+    // share your localhost storage on your localnetwork
+    let socket = Vue.prototype.$socket = io(':3000');
 
     socket.on('init', function(init) {
       console.log('init',init)
