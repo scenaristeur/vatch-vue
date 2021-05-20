@@ -4,7 +4,7 @@
     {{ things.length}}
 
 
-    <Toolbar environnement="pod" />
+    <!-- <Toolbar environnement="pod" /> -->
 
 
     <b-list-group @contextmenu.prevent="$refs.ctxMenu.open">
@@ -33,7 +33,7 @@ export default {
   name: 'PodStorage',
   components :  {
     'StorageItem' :  () => import ( '@/components/storage/StorageItem' ),
-    'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
+    // 'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
     'contextMenu' : () => import('vue-context-menu'),
   },
   data(){

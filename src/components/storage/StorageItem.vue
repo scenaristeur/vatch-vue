@@ -1,6 +1,11 @@
 <template>
-  <b-list-group-item href="#" @click="loadThing(item)">
-    <b>{{item.internal_url}}</b> /// {{type}}<br>
+  <b-list-group-item href="#" @click="loadThing(item)" class="d-flex">
+    <div class="mr-3">
+      <!--  why mr-3 does not work ? -->
+    <b-icon v-if="type=='Container'" icon="folder-fill" variant="warning"></b-icon>
+    <b-icon v-else icon="file-earmark-richtext" variant="info"></b-icon>
+    </div>
+  <span>  {{item.internal_url}}</span>
     <!-- <small>  {{item}}</small> -->
 
   </b-list-group-item>
@@ -27,7 +32,7 @@ export default {
       //   this.item,
       //   this.item.internal_url
       // );
-    //  console.log("thingos", things)
+      //  console.log("thingos", things)
 
       let types = getUrlAll(this.item, RDF.type);
       //console.log("types", types)

@@ -3,10 +3,10 @@
     <h3>Local Browser Events</h3>
 
 
-    <Toolbar environnement="local" />
+    <!-- <Toolbar environnement="local" /> -->
 
     <b-list-group v-if="localResources.length > 0">
-      <b-list-group-item href="#" v-for="(lr, i) in localResources" :key="i" @contextmenu.prevent="$refs.ctxMenuItem.open">
+      <b-list-group-item href="#" v-for="(lr, i) in localResources" :key="i" @contextmenu.prevent="openContext(lr)">
         {{lr}}
       </b-list-group-item>
 
@@ -39,9 +39,23 @@
 
 <context-menu id="context-menu-item" ref="ctxMenuItem">
 
-  <b-list-group-item  href="#" @click="doSomething('1')" class="d-flex justify-content-between align-items-center">  <b-icon icon="pencil-square" scale="2" variant="info"></b-icon>Edit</b-list-group-item>
-  <b-list-group-item  href="#" @click="doSomething('2')" class="d-flex justify-content-between align-items-center"> <b-icon icon="pencil" scale="2" variant="info"></b-icon> Rename</b-list-group-item>
-  <b-list-group-item  href="#" @click="doSomething('3')" class="d-flex justify-content-between align-items-center"> <b-icon icon="x-circle" scale="2" variant="danger"></b-icon> Delete</b-list-group-item>
+  <b-list-group-item v-if="currentRemoteUrl.length > 0" href="#" @click="doSomething('upload')" class="d-flex justify-content-between align-items-center">
+    <b-icon icon="cloud-upload" scale="2" variant="info"></b-icon>
+    <a :title="currentRemoteUrl">Upload to POD</a>
+  </b-list-group-item>
+
+  <b-list-group-item  href="#" @click="doSomething('1')" class="d-flex justify-content-between align-items-center">
+    <b-icon icon="pencil-square" scale="2" variant="info"></b-icon>
+    Edit (todo)
+  </b-list-group-item>
+  <b-list-group-item  href="#" @click="doSomething('2')" class="d-flex justify-content-between align-items-center">
+    <b-icon icon="pencil" scale="2" variant="info"></b-icon>
+    Rename 'todo'
+  </b-list-group-item>
+  <b-list-group-item  href="#" @click="doSomething('3')" class="d-flex justify-content-between align-items-center">
+    <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
+    Delete #todo#
+  </b-list-group-item>
 
 </context-menu>
 
@@ -55,19 +69,40 @@ export default {
   name: 'LocalBrowser',
   components :  {
     'contextMenu' : () => import('vue-context-menu'),
-    'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
+    // 'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
   },
   methods:{
+    openContext(lr){
+      console.log(lr)
+      this.lr = lr
+      this.$refs.ctxMenuItem.open()
+    },
     doSomething(e){
-      console.log(e)
+      let params = {}
+      switch (e) {
+        case 'upload':
+        console.log("upload", this.lr.path, this.currentRemoteUrl)
+         params = {src: this.lr, dest: this.currentRemoteUrl}
+        this.$store.dispatch('vatch/uploadLocalToPod', params)
+        break;
+        default:
+
+      }
+
+
     }
   },
   computed:{
     localResources:{
-      get () { return this.$store.state.localResources},
+      get () { return this.$store.state.vatch.localResources},
       set (/*value*/) { /*this.updateTodo(value)*/ }
 
-    }
+    },
+    currentRemoteUrl:{
+      get () { return this.$store.state.vatch.currentRemoteUrl},
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+
+    },
   }
 }
 </script>

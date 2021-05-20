@@ -14,41 +14,41 @@ const plugin = {
 
     socket.on('init', function(init) {
       console.log('init',init)
-      store.commit("updatepathSep", init.pathsep)
+      store.commit("vatch/updatepathSep", init.pathsep)
     });
 
     socket.on('users', function(users) {
       console.log("users",users)
-      store.commit("setUsers", users)
+      store.commit("vatch/setUsers", users)
     });
 
     socket.on('watcher event', function(ressources) {
 
     //  ressources.map(r => r.parts = r.path.split())
         console.log("Watcher event",ressources)
-      store.commit("updateLocalResources", ressources)
+      store.commit("vatch/updateLocalResources", ressources)
     });
 
     socket.on('walker', function(ressources) {
       console.log("Walker",ressources)
-      store.commit("updateLocalResources", ressources)
+      store.commit("vatch/updateLocalResources", ressources)
     });
 
     socket.on('cat file', function(file) {
       console.log("TODO PROCESSFILE cat file", file)
-      store.commit("setFile", file)
+      store.commit("vatch/setFile", file)
     });
 
     socket.on('chat message', function(msg) {
       console.log('chat message',msg)
-      store.commit("addChatMessage", msg)
+      store.commit("vatch/addChatMessage", msg)
     });
 
     socket.on('connect', () => {
-      store.commit("setUser", socket.id)
+      store.commit("vatch/setUser", socket.id)
     });
     socket.on('disconnect', () => {
-      store.commit("setUser", null)
+      store.commit("vatch/setUser", null)
     });
 
 
