@@ -6,7 +6,7 @@
       <b-spinner label="Loading..." v-if="loading==true"></b-spinner>
 
     </template>
-    {{path}}
+    tags for : <b>{{path}}</b>
 
     <p class="my-4">
 
@@ -27,33 +27,36 @@
       placeholder="type two letters"
       @hit="selectedItem = $event">
 
-  <template slot="suggestion" slot-scope="{ data }">
+      <template slot="suggestion" slot-scope="{ data }">
 
-    <b class="md-2">{{ data.match.text}}&nbsp;</b>
-    <small><i>{{data.description}}</i></small>
+        <b class="md-2">{{ data.match.text}}&nbsp;</b>
+        <small><i>{{data.description}}</i></small>
 
-  </template>
-</vue-bootstrap-typeahead>
+      </template>
+    </vue-bootstrap-typeahead>
 
-</b-form-group>
+  </b-form-group>
 
-<b-list-group>
-  <b-list-group-item v-for="t in tags" :key="t.id" button>
-
-    <b-form-select v-model="vocab" :options="vocab_select"></b-form-select>
-    <b-form-select v-model="predicate" :options="predicate_select"></b-form-select>
+  <b-list-group>
+    <b-list-group-item v-for="t in tags" :key="t.id" button>
+      <VocabSelector :thing='t' @selected="update" />
 
 
-    {{t.label}} ({{t.description}} / {{t.match}})
+      {{t.label}} ({{t.description}} / {{t.match}})
 
-  </b-list-group-item>
+    </b-list-group-item>
 
-</b-list-group>
+  </b-list-group>
 
 
 
 </p>
-<a href="https://www.wikidata.org/w/index.php?title=Special%3ASearch&go=Go&ns0=1&ns120=1" target="_blank">Manual search</a>
+if you don't find, try the <a href="https://www.wikidata.org/w/index.php?title=Special%3ASearch&go=Go&ns0=1&ns120=1" target="_blank">manual search</a>
+<b-form-group label="Privacy:" v-slot="{ ariaDescribedby }">
+  'Public Tag File' allow other people to find this resource with your help ! but you can keep it private 😉
+  <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="public"> Public Tag File</b-form-radio>
+  <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="private"> Private Tag File</b-form-radio>
+</b-form-group>
 
 </b-modal>
 
@@ -68,15 +71,11 @@ export default {
 
   components :  {
     'VueBootstrapTypeahead' :  () => import ( 'vue-bootstrap-typeahead' ),
+    'VocabSelector': () => import ('@/components/solid/VocabSelector')
   },
   created(){
-    console.log(navigator.language)
     this.language = navigator.language.split("-")[0] || 'en'
-    this.vocab_select = Object.keys(this.$store.state.solid.vocabs).map(k => {return {value: this.$store.state.solid.vocabs[k], text: k}  })
-    console.log("SELECT VOCABS", this.vocab_select)
-    this.vocab = this.$store.state.solid.vocabs.FOAF
-    this.predicate_select = Object.keys(this.$store.state.solid.vocabs.FOAF).map(k => {return {value: this.$store.state.solid.vocabs.FOAF[k], text: k}  })
-    this.predicate = this.vocab.topic_interest
+    this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
   },
   data(){
     return {
@@ -87,15 +86,26 @@ export default {
       loading: false,
       conceptUri: "",
       tags: [],
-      vocab_select: [],
-      predicate_select: [],
-      vocab: null,
-      predicate: null
+      privacy: 'public'
     }
   },
   methods: {
+    update(e){
+      console.log(this.privacy, e)
+      let params = {
+        file : this.tagFile,
+        subject: this.path,
+        predicate: e.predicate.value,
+        object:  e.object.url
+      }
+      console.log(params)
+
+
+
+    },
     save(){
-      console.log(this.path, this.tags)
+      console.log(this.tagFile, this.privacy, this.path, this.tags)
+
 
     },
     async getItems(query) {
@@ -145,32 +155,25 @@ export default {
       this.tags.push(this.selectedItem)
       this.itemSearch = ""
     },
-    vocabs(){
-      console.log(this.vocabs)
-      console.log(Object.entries(this.vocabs))
-      this.vocab_select =  Object.keys(this.vocabs).map((k,v) => {return {value: v, text: k}  })
-      console.log("SELECT VOCABS", this.vocab_select)
-    },
-    vocab(){
-      console.log(this.vocab)
-      let voc = this.vocab.PREFIX.toUpperCase()
-      this.predicate_select = Object.keys(this.$store.state.solid.vocabs[voc]).map(k => {return {value: this.$store.state.solid.vocabs[voc][k], text: k}  })
-      //  this.predicate = this.predicate_select[0]
-    },
+
     resourceToTag(){
       if (this.resourceToTag != null){
         this.$bvModal.show("bv-modal-tag")
         this.path = this.resourceToTag
+        this.tags = []
       }
+    },
+    privacy(){
+      this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
     }
   },
   computed:{
-    vocabs:{
-      get () { return this.$store.state.solid.vocabs},
-      set (/*value*/) { /*this.updateTodo(value)*/ }
-    },
     resourceToTag:{
       get () { return this.$store.state.vatch.resourceToTag},
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
+    pod:{
+      get () { return this.$store.state.solid.pod},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
   }
