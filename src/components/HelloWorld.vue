@@ -1,7 +1,7 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <b-container>
+    <h4>{{ msg }}</h4>
+    <b-container class="mb-5">
 
       <b-row>
         <b-col>

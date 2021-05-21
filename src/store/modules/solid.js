@@ -4,7 +4,8 @@ import { getSolidDataset, getThingAll,
   getContentType,
   saveFileInContainer,
   getContainedResourceUrlAll,
-  getSourceUrl, deleteFile, overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
+  createContainerAt,
+  getSourceUrl, deleteFile, deleteContainer, overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { handleIncomingRedirect, login, fetch, getDefaultSession, onSessionRestore,/* getSessionIdFromStorageAll,*/ /*getSessionFromStorage */ } from '@inrupt/solid-client-authn-browser'
   import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { FOAF /*, VCARD */} from "@inrupt/vocab-common-rdf";
@@ -138,6 +139,33 @@ import { getSolidDataset, getThingAll,
 
     },
 
+    async createFile(context, params){
+      try{
+        let type = params.type && params.type.mime || "plain/text"
+        let slug = encodeURIComponent(params.filename)
+        const savedFile = await saveFileInContainer(
+          params.dest,
+          new Blob([params.content || ""], { type: type }),
+          { slug: slug, fetch: fetch }
+        );
+        console.log(`File saved at ${getSourceUrl(savedFile)}`);
+        context.dispatch('setCurrentThingUrl', params.dest)
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    async createFolder(context, params){
+      try{
+        let url = params.dest+encodeURIComponent(params.foldername)
+        const savedFolder = await createContainerAt(url, {fetch: fetch});
+        console.log(`Folder saved at ${getSourceUrl(savedFolder)}`);
+        context.dispatch('setCurrentThingUrl', params.dest)
+      } catch(e){
+        alert(e)
+      }
+    },
+
     async setCurrentThingUrl(context, url){
       try{
         const file = await getFile(url, {fetch: fetch});
@@ -188,10 +216,17 @@ import { getSolidDataset, getThingAll,
     },
     async deleteOnPod(context, url){
       try{
+        if(url.endsWith('/')){
+        await deleteContainer(
+          url, { fetch: fetch }
+        );
+      }
+else{
         await deleteFile(
           url, { fetch: fetch }
         );
-        console.log("File deleted !",url);
+      }
+        console.log(" deleted !",url);
         let parent = url.slice(0, url.lastIndexOf('/'))+'/';
         console.log("parent",parent)
         context.dispatch('setCurrentThingUrl', parent)
