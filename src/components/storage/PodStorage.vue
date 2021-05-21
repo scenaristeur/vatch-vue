@@ -1,73 +1,65 @@
 <template>
-  <div v-if="pod != null">
-    <h3>PodStorage</h3>
-    Name: {{ pod.name }}<br>
-    WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+pod.webId" target="_blank">{{ pod.webId}}</a><br>
-    storage : {{ pod.storage}}   {{ remoteResources.length}}<br><br>
+  <div>
 
+    <div v-if="pod != null">
 
+      <b-button-toolbar aria-label="Toolbar with button groups and input groups">
+        <b-button-group size="sm" class="mr-1" style="width:100%">
+          <b-button><b-icon icon="file-earmark-richtext" aria-hidden="true"></b-icon></b-button>
+          <b-button><b-icon icon="folder-fill" aria-hidden="true"></b-icon></b-button>
+          <b-button @click="load(pod.storage)"><b-icon icon="arrow90deg-up" aria-hidden="true"></b-icon></b-button>
+          <b-button @click="load(parent(currentRemoteUrl))"><b-icon icon="arrow-up" aria-hidden="true"></b-icon></b-button>
+          <b-form-input v-model="currentRemoteUrl" class="text-right" ></b-form-input>
+          <b-button v-b-modal.bv-modal-profile><b-icon icon="person-circle" aria-hidden="true"></b-icon></b-button>
 
+        </b-button-group>
+      </b-button-toolbar>
 
-    <!-- <Toolbar environnement="pod" /> -->
-    <b-list-group >
-      <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
+      <b-list-group >
+        <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
+      </b-list-group>
 
-      <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
-    </b-list-group>
-<!-- <hr>
-    <b-list-group >
-      <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
+      <b-modal id="bv-modal-profile" size="lg">
+        <Login />
+        Name: {{ pod.name }}<br>
+        WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+pod.webId" target="_blank">{{ pod.webId}}</a><br>
 
-      <StorageItem v-for="thing of things" :key="thing.internal_url"  :item="thing"  />
-    </b-list-group> -->
-
-
-
+        {{pod.friends}}
+      </b-modal>
+    </div>
+    <Login v-else />
   </div>
 </template>
-
 <script>
-//import * as jsonld from 'jsonld';
-
-
 
 export default {
   name: 'PodStorage',
   components :  {
     'Resource' :  () => import ( '@/components/storage/Resource' ),
-    // 'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
-  //  'contextMenu' : () => import('vue-context-menu'),
-  },
-  data(){
-    return {
-      //  things: []
-    }
-  },
-  created(){
-  //  this.pod = this.$store.state.solid.pod
-  //  this.things = this.$store.state.solid.things
-    //this.remoteResources = this.$store.state.solid.remoteResources
-  //  console.log("things", this.things)
+    'Login': () => import('@/components/solid/Login')
   },
   methods:{
-    async loadRoot(){
-      this.$store.dispatch('solid/setCurrentThingUrl', this.pod.storage)
+    async load(url){
+      this.$store.dispatch('solid/setCurrentThingUrl', url)
     },
+    parent(url){
+      url = url.endsWith('/') ? url.slice(0, -1) : url;
+      return url.substring( 0, url.lastIndexOf( "/" ) + 1)
+    }
   },
   computed:{
     pod:{
       get () { return this.$store.state.solid.pod},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
-
     remoteResources:{
       get () { return this.$store.state.solid.remoteResources},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
+    currentRemoteUrl:{
+      get () { return this.$store.state.solid.currentRemoteUrl},
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    }
   }
 }
 </script>
-
-<style>
-
-</style>

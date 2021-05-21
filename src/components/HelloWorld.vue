@@ -11,7 +11,7 @@
         </b-col>
 
         <b-col>
-          <Login />
+
           <!-- <div v-if="webId == null">
           <b-form-select v-model="issuer" :options="issuers"></b-form-select>
 
@@ -53,7 +53,7 @@ export default {
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
     'Input' :  () => import ( '@/components/Input' ),
     'Editor' :  () => import ( '@/components/editor/Editor' ),
-    'Login': () => import('@/components/solid/Login')
+
   }
 }
 </script>

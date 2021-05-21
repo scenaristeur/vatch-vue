@@ -1,7 +1,5 @@
 <template>
   <div>
-    Things
-
     <b-modal id="bv-modal-things" @ok="save" size="lg">
       <template #modal-title>
         Things

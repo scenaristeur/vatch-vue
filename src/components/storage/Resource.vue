@@ -14,9 +14,10 @@
           <b-icon icon="x-circle" scale="2" variant="danger"></b-icon>
           Delete
         </b-list-group-item>
-        <b-list-group-item  href="#" @click="doSomething('1')">option 1 P</b-list-group-item>
-        <b-list-group-item  href="#" @click="doSomething('2')">option 2</b-list-group-item>
-        <b-list-group-item  href="#" @click="doSomething('3')">option 3</b-list-group-item>
+        <b-list-group-item  href="#" @click="doSomething('1')">Download (todo)</b-list-group-item>
+        <b-list-group-item  href="#" @click="doSomething('1')">Copy (todo)</b-list-group-item>
+        <b-list-group-item  href="#" @click="doSomething('2')">Rename (todo)</b-list-group-item>
+        <b-list-group-item  href="#" @click="doSomething('3')">Move (todo)</b-list-group-item>
       </b-list-group>
     </context-menu>
 
