@@ -27,17 +27,13 @@
 
     </b-row>
   </b-container>
+  <Tag />
   <Input />
 </div>
 </template>
 
 <script>
 
-// import * as common from "@inrupt/vocab-common-rdf";
-// import * as inrupt from "@inrupt/vocab-inrupt-common"
-// import * as solid from "@inrupt/vocab-solid-common"
-// console.log("vocabs",common, inrupt, solid)
-//import * as jsonld from 'jsonld';
 import Network from "@/components/storage/Network"
 
 export default {
@@ -53,6 +49,7 @@ export default {
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
     'Input' :  () => import ( '@/components/Input' ),
     'Editor' :  () => import ( '@/components/editor/Editor' ),
+    'Tag' :  () => import ( '@/components/social/Tag' )
 
   }
 }

@@ -21,10 +21,12 @@
     "jsonld": "^5.2.0",
     "register-service-worker": "^1.7.1",
     "socket.io-client": "^4.1.2",
+    "underscore": "^1.13.1",
     "vis-data": "^7.1.2",
     "vis-network": "^9.0.4",
     "vis-util": "^5.0.2",
     "vue": "^2.6.12",
+    "vue-bootstrap-typeahead": "^0.2.6",
     "vue-context-menu": "^2.0.6",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"

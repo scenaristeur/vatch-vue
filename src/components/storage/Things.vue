@@ -3,12 +3,13 @@
     <b-modal id="bv-modal-things" @ok="save" size="lg">
       <template #modal-title>
         Things
+
       </template>
-      <div v-for="t in things" :key="t.internal_url" :title="thingAsMarkdown(t)">
-        {{asUrl(t)}}
+      <div v-for="(t,i) in things" :key="i" :title="thingAsMarkdown(t)">
+        {{asUrl(t)}} <TagButton :path="t.internal_url"/>
         <br>
         <ul>
-          <li v-for="q in t._quads" :key="q">
+          <li v-for="(q,j) in t._quads" :key="j">
 
             <!-- {{q[1].subject.value}} ->  -->
             {{q[1].predicate.value}}  -> {{q[1].object.value}}
@@ -34,6 +35,9 @@ import { thingAsMarkdown, asUrl/* getStringNoLocale, getUrlAll*/ /*saveSolidData
 
 export default {
   name: 'Things',
+  components :  {
+    'TagButton' :  () => import ( '@/components/social/TagButton' )
+  },
   methods:{
     thingAsMarkdown(t){
       return thingAsMarkdown(t)
@@ -48,22 +52,22 @@ export default {
   watch:{
     things(){
       console.log(this.things)
-      this.things.forEach(t => {
-        console.log(t)
-        console.log("entities", t._entities)
-        Object.entries(t._entities).forEach((e) => {
-          console.log("e",e)
-        });
-
-        console.log("graphs", t._graphs)
-        console.log("quads", t._quads)
-        Object.entries(t._graphs).forEach((g) => {
-          console.log("g",g)
-        });
-        t._quads.forEach((values,keys)=>{
-          console.log(values,keys+"<br>")
-        })
-      });
+      // this.things.forEach(t => {
+      //   console.log(t)
+      //   console.log("entities", t._entities)
+      //   Object.entries(t._entities).forEach((e) => {
+      //     console.log("e",e)
+      //   });
+      //
+      //   console.log("graphs", t._graphs)
+      //   console.log("quads", t._quads)
+      //   Object.entries(t._graphs).forEach((g) => {
+      //     console.log("g",g)
+      //   });
+      //   t._quads.forEach((values,keys)=>{
+      //     console.log(values,keys+"<br>")
+      //   })
+      // });
 
       this.$bvModal.show('bv-modal-things')
     }

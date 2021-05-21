@@ -10,6 +10,9 @@ import { getSolidDataset, getThingAll,
   import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { FOAF /*, VCARD */} from "@inrupt/vocab-common-rdf";
   import { WS /*, VCARD */} from "@inrupt/vocab-solid-common";
+  import * as common from "@inrupt/vocab-common-rdf";
+  import * as inrupt from "@inrupt/vocab-inrupt-common"
+  import * as solid from "@inrupt/vocab-solid-common"
 
   const state = () => ({
     session: null,
@@ -17,6 +20,11 @@ import { getSolidDataset, getThingAll,
     currentRemoteUrl: "",
     remoteResources: [],
     things: [],
+    vocabs: {
+      ...common,
+      ...inrupt,
+      ...solid
+    }
   })
 
   const actions = {

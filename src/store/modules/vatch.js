@@ -1,19 +1,20 @@
 const state = () => ({
   //pod
-//  podStorage : null,
+  //  podStorage : null,
 
   //Local
   pathsep: '/', //  ... / for linux, \\ for Windows
   users: [],
   localResources : [],
-//  podResources: {},
+  //  podResources: {},
   netWork: {},
   user: null,
   chatMessages : [],
   file: {},
-//  webId: null,
+  //  webId: null,
   storage: null,
   input: '',
+  resourceToTag: null
 
 })
 
@@ -48,6 +49,9 @@ const mutations = {
   },
   setFile(state, f){
     state.file = f
+  },
+  SetResourceToTag(state, r){
+    state.resourceToTag = r
   },
 
 }
