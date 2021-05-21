@@ -3,6 +3,7 @@ import { getSolidDataset, getThingAll,
   isRawData,
   getContentType,
   saveFileInContainer,
+  getContainedResourceUrlAll,
   getSourceUrl, deleteFile, overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { handleIncomingRedirect, login, fetch, getDefaultSession, onSessionRestore,/* getSessionIdFromStorageAll,*/ /*getSessionFromStorage */ } from '@inrupt/solid-client-authn-browser'
   import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
@@ -13,6 +14,7 @@ import { getSolidDataset, getThingAll,
     session: null,
     pod: null,
     currentRemoteUrl: "",
+    remoteResources: [],
     things: [],
   })
 
@@ -116,6 +118,10 @@ import { getSolidDataset, getThingAll,
     },
 
     async setCurrentThingUrl(context, url){
+
+
+
+
       const file = await getFile(url, {fetch: fetch});
       // file is a Blob (see https://developer.mozilla.org/docs/Web/API/Blob)
       console.log(
@@ -141,13 +147,25 @@ import { getSolidDataset, getThingAll,
         });
         reader.readAsText(file);
       }else{
+
+
+
         const myDataset = await getSolidDataset( url, {fetch: fetch});
         console.log(myDataset)
-        const things = await getThingAll(
-          myDataset,
-          url
-        );
-        context.commit('setThings',things)
+
+        let resources = await getContainedResourceUrlAll(myDataset,{fetch: fetch} )
+        console.log("Resources", resources)
+        if(resources.length > 0){
+          context.commit('setRemoteResources',resources)
+        }else{
+          const things = await getThingAll(
+            myDataset,
+            url
+          );
+          context.commit('setThings',things)
+        }
+
+
       }
     },
     async deleteOnPod(context, url){
@@ -172,6 +190,9 @@ import { getSolidDataset, getThingAll,
     },
     setCurrentRemoteUrl(state, url){
       state.currentRemoteUrl = url
+    },
+    setRemoteResources(state, r){
+      state.remoteResources = r
     },
     setThings(state, things){
       state.things = things

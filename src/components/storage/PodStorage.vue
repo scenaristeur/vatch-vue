@@ -3,19 +3,23 @@
     <h3>PodStorage</h3>
     Name: {{ pod.name }}<br>
     WebId : <a :href="'https://podbrowser.inrupt.com/resource/'+pod.webId" target="_blank">{{ pod.webId}}</a><br>
-    storage : {{ pod.storage}}   {{ things.length}}<br><br>
+    storage : {{ pod.storage}}   {{ remoteResources.length}}<br><br>
 
 
 
 
     <!-- <Toolbar environnement="pod" /> -->
+    <b-list-group >
+      <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
 
-
+      <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
+    </b-list-group>
+<!-- <hr>
     <b-list-group >
       <b-list-group-item href="#" variant="success" @click="loadRoot()">{{pod.storage}}</b-list-group-item>
 
       <StorageItem v-for="thing of things" :key="thing.internal_url"  :item="thing"  />
-    </b-list-group>
+    </b-list-group> -->
 
 
 
@@ -30,7 +34,7 @@
 export default {
   name: 'PodStorage',
   components :  {
-    'StorageItem' :  () => import ( '@/components/storage/StorageItem' ),
+    'Resource' :  () => import ( '@/components/storage/Resource' ),
     // 'Toolbar' :  () => import ( '@/components/storage/Toolbar' ),
   //  'contextMenu' : () => import('vue-context-menu'),
   },
@@ -40,31 +44,24 @@ export default {
     }
   },
   created(){
-    this.pod = this.$store.state.solid.pod
-    this.things = this.$store.state.solid.things
-    console.log("things", this.things)
+  //  this.pod = this.$store.state.solid.pod
+  //  this.things = this.$store.state.solid.things
+    //this.remoteResources = this.$store.state.solid.remoteResources
+  //  console.log("things", this.things)
   },
   methods:{
     async loadRoot(){
       this.$store.dispatch('solid/setCurrentThingUrl', this.pod.storage)
     },
-
-  },
-  watch:{
-    pod(){
-      console.log("Pod", this.pod)
-    },
-    things(){
-      console.log("Watch things", this.things)
-    }
   },
   computed:{
     pod:{
       get () { return this.$store.state.solid.pod},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
-    things:{
-      get () { return this.$store.state.solid.things},
+
+    remoteResources:{
+      get () { return this.$store.state.solid.remoteResources},
       set (/*value*/) { /*this.updateTodo(value)*/ }
     },
   }

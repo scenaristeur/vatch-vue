@@ -20,7 +20,7 @@
         <b-button v-else @click="logout">Logout</b-button> -->
 
 
-
+        <Things />
         <PodStorage />
 
       </b-col>
@@ -49,6 +49,7 @@ export default {
     Network,
     // 'Network' :  () => import ( '@/components/storage/Network' ),
     'PodStorage' :  () => import ( '@/components/storage/PodStorage' ),
+    'Things' :  () => import ( '@/components/storage/Things' ),
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
     'Input' :  () => import ( '@/components/Input' ),
     'Editor' :  () => import ( '@/components/editor/Editor' ),
