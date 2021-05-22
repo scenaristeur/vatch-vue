@@ -19,13 +19,7 @@
         <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
       </b-list-group>
 
-      <b-modal id="bv-modal-profile" size="lg">
-        <Login />
-        Name: {{ pod.name }}<br>
-        WebId : <a :href="pod.webId" target="_blank">{{ pod.webId}}</a>  <a href="https://podbrowser.inrupt.com/" target="_blank">Pod Browser</a><br>
-
-        {{pod.friends}}
-      </b-modal>
+      <Profile />
     </div>
     <Login v-else />
   </div>
@@ -36,7 +30,8 @@ export default {
   name: 'PodStorage',
   components :  {
     'Resource' :  () => import ( '@/components/storage/Resource' ),
-    'Login': () => import('@/components/solid/Login')
+    'Login': () => import('@/components/solid/Login'),
+    'Profile': () => import('@/components/solid/Profile')
   },
   methods:{
     async load(url){

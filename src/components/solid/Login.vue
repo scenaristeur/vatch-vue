@@ -3,7 +3,7 @@
 
     <div v-if="!isLoggedIn" class="d-flex align-items-center">
       <b-form-select v-model="issuer" :options="issuers"></b-form-select>
-      <b-button  @click="login" :disabled="issuer == null" variant="success">Login</b-button>
+      <b-button  @click="login" :disabled="issuer == null" variant="success" size="sm">Login</b-button>
     </div>
 
     <div v-else class="d-flex align-items-center">
@@ -15,7 +15,7 @@
       restore session on next time
     </b-form-checkbox>
 
-    <b-button @click="logout" variant="outline-danger">Logout</b-button>
+    <b-button @click="logout" variant="outline-danger" size="sm">Logout</b-button>
 
   </div>
 

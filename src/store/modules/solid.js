@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { getSolidDataset, getThingAll,
   getFile,
   isRawData,
@@ -7,6 +8,7 @@ import { getSolidDataset, getThingAll,
   createContainerAt,
   getSourceUrl, deleteFile, deleteContainer,
   //  addStringNoLocale,
+  getThing,
   setThing,
   saveSolidDatasetAt,
   createSolidDataset,
@@ -14,9 +16,7 @@ import { getSolidDataset, getThingAll,
   addUrl,
   overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { handleIncomingRedirect, login, fetch, getDefaultSession, onSessionRestore,/* getSessionIdFromStorageAll,*/ /*getSessionFromStorage */ } from '@inrupt/solid-client-authn-browser'
-  import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
-  import { FOAF, /*RDF, LDP, VCARD */} from "@inrupt/vocab-common-rdf";
-  import { WS, /*, VCARD */} from "@inrupt/vocab-solid-common";
+
   import * as common from "@inrupt/vocab-common-rdf";
   import * as inrupt from "@inrupt/vocab-inrupt-common"
   import * as solid from "@inrupt/vocab-solid-common"
@@ -83,11 +83,7 @@ import { getSolidDataset, getThingAll,
         pod.logged = session.info.isLoggedIn
         if (pod.logged) {
           pod.webId = session.info.webId
-          const myDataset = await getSolidDataset( pod.webId, { fetch: fetch });
-          pod.profile = getThing( myDataset, pod.webId );
-          pod.name = getStringNoLocale(pod.profile, FOAF.name);
-          pod.friends = getUrlAll(pod.profile, FOAF.knows);
-          pod.storage = getUrl(pod.profile, WS.storage);
+          pod = await Vue.prototype.$getPodInfos(pod)
           context.commit('setPod', pod)
           if (pod.storage != null){
             context.dispatch('setCurrentThingUrl', pod.storage)
@@ -104,23 +100,12 @@ import { getSolidDataset, getThingAll,
 
     async getTags(context, podStorage){
       let publicTagFile = podStorage+'public/tags.ttl'
-      let privateTagFile = podStorage+'private/tags.ttl'
-      console.log(publicTagFile, privateTagFile)
-      const publicTagDataset = await getSolidDataset( publicTagFile, { fetch: fetch });
-      const privateTagDataset = await getSolidDataset( privateTagFile, { fetch: fetch });
+      //let privateTagFile = podStorage+'private/tags.ttl'
 
-      const publicThingsTagged = await getThingAll(
-        publicTagDataset,
-        publicTagFile
-      );
+      let tags = await Vue.prototype.$getTags(publicTagFile)
+      console.log("tags",tags)
 
-      const privateThingsTagged = await getThingAll(
-        privateTagDataset,
-        privateTagFile
-      );
 
-      console.log("publicTags",publicThingsTagged)
-      console.log("privateTags",privateThingsTagged)
     },
 
     async addTags(context, params){
@@ -130,23 +115,23 @@ import { getSolidDataset, getThingAll,
       try{
         tagDataset = await getSolidDataset(params.tagFile, {fetch: fetch});
       }catch(e){
-      //  console.log(e)
+        //  console.log(e)
       }
 
-    //  console.log(tagDataset)
+      //  console.log(tagDataset)
       tagDataset== undefined || tagDataset== null ? tagDataset = createSolidDataset() :""
 
       let thing, thingInDs;
       //thing = addUrl(thing, RDF.type, LDP.Resource);
       params.tags.forEach((t) => {
         console.log("add",t.subject, t.predicate.value, t.object.concepturi )
-      //  console.log(thing == undefined || thing ==null, thing)
+        //  console.log(thing == undefined || thing ==null, thing)
         //thing == undefined || thing ==null ?  thing = getThing(tagDataset, params.tagFile+"#"+t.subject) : ""
         thing == undefined || thing ==null ?  thing = getThing(tagDataset, t.subject) : ""
-      //  console.log(thing)
+        //  console.log(thing)
         //  thing == null ? thing = createThing({name: t.subject}) : ""
         thing == null ? thing = createThing({url: t.subject}) : ""
-      //  console.log(thing)
+        //  console.log(thing)
         thing = addUrl(thing, t.predicate.value, t.object.concepturi);
 
       });
