@@ -1,6 +1,6 @@
 <template>
   <div>
-    for {{ thing.label }}
+    for {{ tag }}
     <b-form-select v-model="vocab" :options="vocab_select"></b-form-select>
     <b-form-select v-model="predicate" :options="predicate_select"></b-form-select>
 
@@ -10,7 +10,7 @@
 <script>
 export default {
   name:'VocabSelector',
-  props: ['thing'],
+  props: ['tag'],
   created(){
 
     this.vocab_select = Object.keys(this.$store.state.solid.vocabs).map(k => {return {value: this.$store.state.solid.vocabs[k], text: k}  })
@@ -30,7 +30,10 @@ export default {
 
   watch:{
     predicate(){
-       this.$emit('selected', { predicate: this.predicate, object: this.thing})
+      console.log(this.predicate)
+      this.tag.predicate = this.predicate
+      console.log(this.tag)
+      // this.$emit('selected', { predicate: this.predicate, object: this.thing})
     },
     vocabs(){
       console.log(this.vocabs)

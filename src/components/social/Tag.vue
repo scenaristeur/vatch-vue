@@ -6,7 +6,7 @@
       <b-spinner label="Loading..." v-if="loading==true"></b-spinner>
 
     </template>
-    tags for : <b>{{path}}</b>
+    tags for : <b>{{resourceToTag}}</b>
 
     <p class="my-4">
 
@@ -39,7 +39,7 @@
 
   <b-list-group>
     <b-list-group-item v-for="t in tags" :key="t.id" button>
-      <VocabSelector :thing='t' @selected="update" />
+      <VocabSelector :tag='t' @selected="update" />
 
 
       {{t.label}} ({{t.description}} / {{t.match}})
@@ -75,11 +75,12 @@ export default {
   },
   created(){
     this.language = navigator.language.split("-")[0] || 'en'
-    this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
+
+
   },
   data(){
     return {
-      path: null,
+    //  path: null,
       items: [],
       itemSearch: '',
       selectedItem: null,
@@ -91,21 +92,24 @@ export default {
   },
   methods: {
     update(e){
-      console.log(this.privacy, e)
-      let params = {
-        file : this.tagFile,
-        subject: this.path,
-        predicate: e.predicate.value,
-        object:  e.object.url
-      }
-      console.log(params)
+      console.log(e)
+      // let params = {
+      //   subject: this.path,
+      //   predicate: e.predicate.value,
+      //   object:  e.object.url
+      // }
+      // console.log(params)
+      // this.tags[this.path] == undefined ? this.tags[this.path] = [] : ""
+      // this.tags[this.path].push(e)
 
-
-
+      console.log(this.tags)
     },
     save(){
-      console.log(this.tagFile, this.privacy, this.path, this.tags)
-
+      console.log(this.tags)
+      this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
+      // console.log(this.tagFile, this.path, this.tags)
+       let params = {tagFile: this.tagFile, tags: this.tags}
+       this.$store.dispatch('solid/addTags', params)
 
     },
     async getItems(query) {
@@ -148,22 +152,25 @@ export default {
   watch: {
     itemSearch: _.debounce(function(item) { this.getItems(item) }, 500),
     selectedItem(){
-      console.log(this.selectedItem)
-      this.conceptUri = this.selectedItem.concepturi
-      console.log("conceptUri",this.conceptUri)
-      console.log("selected",this.selectedItem)
-      this.tags.push(this.selectedItem)
+      console.log("selected",this.selectedItem.conceptUri, this.selectedItem)
+      let tag = {subject: this.resourceToTag, predicate: null, object: this.selectedItem}
+      this.tags.push(tag)
       this.itemSearch = ""
+      console.log(this.tags)
     },
 
     resourceToTag(){
       if (this.resourceToTag != null){
         this.$bvModal.show("bv-modal-tag")
-        this.path = this.resourceToTag
-        this.tags = []
+
+
       }
+          this.tags = []
     },
     privacy(){
+      this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
+    },
+    pod(){
       this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
     }
   },

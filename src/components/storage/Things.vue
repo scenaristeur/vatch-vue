@@ -18,7 +18,7 @@
 
       </div>
       <hr>
-      {{ things }}
+      <!-- {{ things }} -->
       <!-- <b-img v-if="src.length > 0" :src="src" width="425px"/>
       <b-textarea v-else v-model="content" rows="20" cols="50">
     </b-textarea> -->
@@ -68,6 +68,7 @@ export default {
       //     console.log(values,keys+"<br>")
       //   })
       // });
+      this.$store.commit('vatch/SetResourceToTag', null)
 
       this.$bvModal.show('bv-modal-things')
     }

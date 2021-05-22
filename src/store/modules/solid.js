@@ -5,11 +5,18 @@ import { getSolidDataset, getThingAll,
   saveFileInContainer,
   getContainedResourceUrlAll,
   createContainerAt,
-  getSourceUrl, deleteFile, deleteContainer, overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
+  getSourceUrl, deleteFile, deleteContainer,
+  //  addStringNoLocale,
+  setThing,
+  saveSolidDatasetAt,
+  createSolidDataset,
+  createThing,
+  addUrl,
+  overwriteFile/* getStringNoLocale, getUrlAll*/ /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
   import { handleIncomingRedirect, login, fetch, getDefaultSession, onSessionRestore,/* getSessionIdFromStorageAll,*/ /*getSessionFromStorage */ } from '@inrupt/solid-client-authn-browser'
   import {  getThing, getStringNoLocale, getUrlAll, getUrl /*saveSolidDatasetAt*/ } from "@inrupt/solid-client";
-  import { FOAF /*, VCARD */} from "@inrupt/vocab-common-rdf";
-  import { WS /*, VCARD */} from "@inrupt/vocab-solid-common";
+  import { FOAF, /*RDF, LDP, VCARD */} from "@inrupt/vocab-common-rdf";
+  import { WS, /*, VCARD */} from "@inrupt/vocab-solid-common";
   import * as common from "@inrupt/vocab-common-rdf";
   import * as inrupt from "@inrupt/vocab-inrupt-common"
   import * as solid from "@inrupt/vocab-solid-common"
@@ -24,7 +31,8 @@ import { getSolidDataset, getThingAll,
       ...common,
       ...inrupt,
       ...solid
-    }
+    },
+    tags: {}
   })
 
   const actions = {
@@ -83,6 +91,7 @@ import { getSolidDataset, getThingAll,
           context.commit('setPod', pod)
           if (pod.storage != null){
             context.dispatch('setCurrentThingUrl', pod.storage)
+            context.dispatch('getTags', pod.storage)
           }
         }else{
           context.commit('setPod', null)
@@ -91,6 +100,61 @@ import { getSolidDataset, getThingAll,
       } catch(e){
         alert(e)
       }
+    },
+
+    async getTags(context, podStorage){
+      let publicTagFile = podStorage+'public/tags.ttl'
+      let privateTagFile = podStorage+'private/tags.ttl'
+      console.log(publicTagFile, privateTagFile)
+      const publicTagDataset = await getSolidDataset( publicTagFile, { fetch: fetch });
+      const privateTagDataset = await getSolidDataset( privateTagFile, { fetch: fetch });
+
+      const publicThingsTagged = await getThingAll(
+        publicTagDataset,
+        publicTagFile
+      );
+
+      const privateThingsTagged = await getThingAll(
+        privateTagDataset,
+        privateTagFile
+      );
+
+      console.log("publicTags",publicThingsTagged)
+      console.log("privateTags",privateThingsTagged)
+    },
+
+    async addTags(context, params){
+      //console.log(params)
+
+      let tagDataset
+      try{
+        tagDataset = await getSolidDataset(params.tagFile, {fetch: fetch});
+      }catch(e){
+      //  console.log(e)
+      }
+
+    //  console.log(tagDataset)
+      tagDataset== undefined || tagDataset== null ? tagDataset = createSolidDataset() :""
+
+      let thing, thingInDs;
+      //thing = addUrl(thing, RDF.type, LDP.Resource);
+      params.tags.forEach((t) => {
+        console.log("add",t.subject, t.predicate.value, t.object.concepturi )
+      //  console.log(thing == undefined || thing ==null, thing)
+        //thing == undefined || thing ==null ?  thing = getThing(tagDataset, params.tagFile+"#"+t.subject) : ""
+        thing == undefined || thing ==null ?  thing = getThing(tagDataset, t.subject) : ""
+      //  console.log(thing)
+        //  thing == null ? thing = createThing({name: t.subject}) : ""
+        thing == null ? thing = createThing({url: t.subject}) : ""
+      //  console.log(thing)
+        thing = addUrl(thing, t.predicate.value, t.object.concepturi);
+
+      });
+      thingInDs = setThing(tagDataset, thing);
+
+
+      let savedThing = await saveSolidDatasetAt(params.tagFile, thingInDs, { fetch: fetch } );
+      console.log("File saved",savedThing);
     },
 
     async uploadLocalToPod(context,params){
@@ -225,15 +289,15 @@ import { getSolidDataset, getThingAll,
     async deleteOnPod(context, url){
       try{
         if(url.endsWith('/')){
-        await deleteContainer(
-          url, { fetch: fetch }
-        );
-      }
-else{
-        await deleteFile(
-          url, { fetch: fetch }
-        );
-      }
+          await deleteContainer(
+            url, { fetch: fetch }
+          );
+        }
+        else{
+          await deleteFile(
+            url, { fetch: fetch }
+          );
+        }
         console.log(" deleted !",url);
         let parent = url.slice(0, url.lastIndexOf('/'))+'/';
         console.log("parent",parent)
