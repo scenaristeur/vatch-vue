@@ -14,8 +14,8 @@ const state = () => ({
   //  webId: null,
   storage: null,
   input: '',
-  resourceToTag: null
-
+  resourceToTag: null,
+  networkAdds: {}
 })
 
 const actions = {
@@ -53,6 +53,10 @@ const mutations = {
   SetResourceToTag(state, r){
     state.resourceToTag = r
   },
+  addToNetwork(state,n){
+    console.log("addToNetwork", n)
+    state.networkAdds = n
+  }
 
 }
 

@@ -58,9 +58,9 @@ export default {
             this.network.openCluster(evt.nodes[0]);
           }else{
             let n_id = evt.nodes[0]
-          //  input.value = n_id
-          this.$store.commit('vatch/setInput', n_id)
-          console.log("input.value", n_id)
+            //  input.value = n_id
+            this.$store.commit('vatch/setInput', n_id)
+            console.log("input.value", n_id)
             let n = this.data.nodes.get(n_id);
             console.log("selected",n)
             console.log("socket",this.$socket)
@@ -76,8 +76,8 @@ export default {
         }
       })
 
-       this.localResources = this.$store.state.vatch.localResources
-       console.log(this.localResources)
+      this.localResources = this.$store.state.vatch.localResources
+      console.log(this.localResources)
 
     },
     methods:{
@@ -226,6 +226,11 @@ export default {
       localResources(){
         console.log("Resources in network",this.localResources)
         this.process(this.localResources)
+      },
+      networkAdds(){
+        console.log(this.addToNetwork)
+        this.data.nodes.update(this.networkAdds.nodes)
+        this.data.edges.update(this.networkAdds.edges)
       }
     },
     computed:{
@@ -235,6 +240,10 @@ export default {
       },
       localResources:{
         get () { return this.$store.state.vatch.localResources},
+        set (/*value*/) { /*this.updateTodo(value)*/ }
+      },
+      networkAdds:{
+        get () { return this.$store.state.vatch.networkAdds},
         set (/*value*/) { /*this.updateTodo(value)*/ }
       }
     }

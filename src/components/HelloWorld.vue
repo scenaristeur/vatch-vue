@@ -5,31 +5,21 @@
 
       <b-row>
         <b-col>
-          <Network />
-          <Editor />
           <LocalBrowser />
+
+        </b-col>
+        <b-col>
+          <PodStorage />
         </b-col>
 
-        <b-col>
-
-          <!-- <div v-if="webId == null">
-          <b-form-select v-model="issuer" :options="issuers"></b-form-select>
-
-          <b-button  @click="login">Login</b-button>
-        </div>
-        <b-button v-else @click="logout">Logout</b-button> -->
-
-
-        <Things />
-        <PodStorage />
-
-      </b-col>
-
-    </b-row>
-  </b-container>
-  <Tag />
-  <Input />
-</div>
+      </b-row>
+      <Network />
+    </b-container>
+    <Things />
+    <Editor />
+    <Tag />
+    <Input />
+  </div>
 </template>
 
 <script>

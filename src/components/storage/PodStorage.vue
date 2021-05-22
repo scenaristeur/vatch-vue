@@ -1,24 +1,34 @@
 <template>
-  <div>
+  <div  class="mb-4">
 
     <div v-if="pod != null">
 
       <b-button-toolbar aria-label="Toolbar with button groups and input groups">
         <b-button-group size="sm" class="mr-1" style="width:100%">
-          <b-button @click="newFile"><b-icon icon="file-earmark-richtext" aria-hidden="true"></b-icon></b-button>
-          <b-button @click="newFolder"><b-icon icon="folder-fill" aria-hidden="true"></b-icon></b-button>
           <b-button @click="load(pod.storage)"><b-icon icon="arrow90deg-up" aria-hidden="true"></b-icon></b-button>
           <b-button @click="load(parent(currentRemoteUrl))"><b-icon icon="arrow-up" aria-hidden="true"></b-icon></b-button>
-          <b-form-input v-model="currentRemoteUrl" class="text-right" ></b-form-input>
+          <b-button @click="newFile"><b-icon icon="file-earmark-richtext" aria-hidden="true"></b-icon></b-button>
+          <b-button @click="newFolder"><b-icon icon="folder-fill" aria-hidden="true"></b-icon></b-button>
           <b-button v-b-modal.bv-modal-profile><b-icon icon="person-circle" aria-hidden="true"></b-icon></b-button>
+        </b-button-group>
+        <b-button-group>
+          <b-form-input v-model="currentRemoteUrl" class="text-right" ></b-form-input>
 
         </b-button-group>
       </b-button-toolbar>
 
-      <b-list-group >
-        <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
-      </b-list-group>
 
+
+      <Tags :tags="pod.publicTags" />
+
+
+
+
+      <div style="height: 400px;overflow-y: scroll;">
+        <b-list-group >
+          <Resource v-for="res of remoteResources" :key="res"  :resource="res"  />
+        </b-list-group>
+      </div>
       <Profile />
     </div>
     <Login v-else />
@@ -31,7 +41,8 @@ export default {
   components :  {
     'Resource' :  () => import ( '@/components/storage/Resource' ),
     'Login': () => import('@/components/solid/Login'),
-    'Profile': () => import('@/components/solid/Profile')
+    'Profile': () => import('@/components/solid/Profile'),
+    'Tags': () => import('@/components/social/Tags')
   },
   methods:{
     async load(url){

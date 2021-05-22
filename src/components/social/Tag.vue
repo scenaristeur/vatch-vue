@@ -41,9 +41,6 @@
     </b-list-group-item>
 
   </b-list-group>
-
-
-
 </p>
 
 <b-row>
@@ -75,8 +72,6 @@ export default {
   },
   created(){
     this.language = navigator.language.split("-")[0] || 'en'
-
-
   },
   data(){
     return {
@@ -130,24 +125,24 @@ export default {
         this.loading = false
       }
     },
-    change(e) {
-      console.log(e)
-    },
-    input(e) {
-      console.log(e)
-      //  let val = e.target.value
-      // console.log(val)
-      if (e.length > 1){
-        let search_url = `http://www.wikidata.org/w/api.php
-        &action=wbsearchentities
-        &format=json
-        &language=${this.language}
-        &type=item
-        &continue=0
-        &search=${e}`
-        console.log(search_url)
-      }
-    }
+    // change(e) {
+    //   console.log(e)
+    // },
+    // input(e) {
+    //   console.log(e)
+    //   //  let val = e.target.value
+    //   // console.log(val)
+    //   if (e.length > 1){
+    //     let search_url = `http://www.wikidata.org/w/api.php
+    //     &action=wbsearchentities
+    //     &format=json
+    //     &language=${this.language}
+    //     &type=item
+    //     &continue=0
+    //     &search=${e}`
+    //     console.log(search_url)
+    //   }
+    // }
   },
   watch: {
     itemSearch: _.debounce(function(item) { this.getItems(item) }, 500),

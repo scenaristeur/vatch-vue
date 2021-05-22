@@ -8,7 +8,7 @@ import VueSocket from './plugins/vue-socket';
 import VueSolid from './plugins/vue-solid';
 
 Vue.use(VueSocket, {store: store});
-Vue.use(VueSolid/*, {store: store}*/);
+Vue.use(VueSolid, {store: store});
 
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
