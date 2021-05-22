@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "d643b5eedf8ff4b83250",
+    "revision": "c01d33edbd86d8a985b7",
     "url": "/vatch-vue/css/app.46514082.css"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/css/chunk-vendors.1d5dfc9b.css"
   },
   {
-    "revision": "73fbd08ceaa56085fd5b843d8745cf00",
+    "revision": "e5195b35b646109dc940673292410eb9",
     "url": "/vatch-vue/index.html"
   },
   {
@@ -24,8 +24,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/js/about.f17f84a0.js"
   },
   {
-    "revision": "d643b5eedf8ff4b83250",
-    "url": "/vatch-vue/js/app.3f469c1b.js"
+    "revision": "c01d33edbd86d8a985b7",
+    "url": "/vatch-vue/js/app.9fa45db7.js"
   },
   {
     "revision": "639dae623832108183e6",
@@ -60,24 +60,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/js/chunk-2d207e90.47011d2c.js"
   },
   {
-    "revision": "92e776cf79f1d33c5f36",
-    "url": "/vatch-vue/js/chunk-2d222392.d2091b1a.js"
+    "revision": "2ae4e85186ece932853d",
+    "url": "/vatch-vue/js/chunk-2d222392.06d8a37a.js"
   },
   {
     "revision": "1c39c38a6048b7c5b749",
     "url": "/vatch-vue/js/chunk-49693460.758c0dc8.js"
   },
   {
-    "revision": "7918cca18d2a11a16b6c",
-    "url": "/vatch-vue/js/chunk-702a9089.30a7ecc7.js"
+    "revision": "dbc97486628bfe9e6456",
+    "url": "/vatch-vue/js/chunk-702a9089.013bf8eb.js"
   },
   {
-    "revision": "9e5896920659e159d391",
-    "url": "/vatch-vue/js/chunk-74a2efbf.f51828ee.js"
+    "revision": "cc28fadab09331ba5a20",
+    "url": "/vatch-vue/js/chunk-74a2efbf.a08a5650.js"
   },
   {
-    "revision": "db1c5c6004d96b886549",
-    "url": "/vatch-vue/js/chunk-d8fe2374.5bc90e43.js"
+    "revision": "3b3eabbf9291b86b892f",
+    "url": "/vatch-vue/js/chunk-d8fe2374.68ff1412.js"
   },
   {
     "revision": "7201a42b7b2c9e4b9bc4",
