@@ -3,14 +3,14 @@
   <b-modal id="bv-modal-tag" @ok="save" size="lg">
     <template #modal-title>
       Wikidata tagger
+      <small><i> (if you don't find, try the <a href="https://www.wikidata.org/w/index.php?title=Special%3ASearch&go=Go&ns0=1&ns120=1" target="_blank">manual search</a>)</i></small>
+
       <b-spinner label="Loading..." v-if="loading==true"></b-spinner>
 
     </template>
-    tags for : <b>{{resourceToTag}}</b>
+    Tags for <b>{{resourceToTag}}</b>
 
     <p class="my-4">
-
-
       <b-form-group
       label="Search on wikidata"
       label-for="wikidata_search"
@@ -28,10 +28,8 @@
       @hit="selectedItem = $event">
 
       <template slot="suggestion" slot-scope="{ data }">
-
         <b class="md-2">{{ data.match.text}}&nbsp;</b>
         <small><i>{{data.description}}</i></small>
-
       </template>
     </vue-bootstrap-typeahead>
 
@@ -40,10 +38,6 @@
   <b-list-group>
     <b-list-group-item v-for="t in tags" :key="t.id" button>
       <VocabSelector :tag='t' @selected="update" />
-
-
-      {{t.label}} ({{t.description}} / {{t.match}})
-
     </b-list-group-item>
 
   </b-list-group>
@@ -51,12 +45,18 @@
 
 
 </p>
-if you don't find, try the <a href="https://www.wikidata.org/w/index.php?title=Special%3ASearch&go=Go&ns0=1&ns120=1" target="_blank">manual search</a>
-<b-form-group label="Privacy:" v-slot="{ ariaDescribedby }">
-  'Public Tag File' allow other people to find this resource with your help ! but you can keep it private 😉
-  <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="public"> Public Tag File</b-form-radio>
-  <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="private"> Private Tag File</b-form-radio>
-</b-form-group>
+
+<b-row>
+  <b-col class="col-3">
+    <b-form-group label="Privacy:" v-slot="{ ariaDescribedby }">
+      <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="public"> Public Tag File</b-form-radio>
+      <b-form-radio v-model="privacy" :aria-describedby="ariaDescribedby" name="some-radios" value="private"> Private Tag File</b-form-radio>
+    </b-form-group>
+  </b-col>
+  <b-col>
+    'Public Tag File' allow other people to find this resource with your help ! but you can keep it private 😉
+  </b-col>
+</b-row>
 
 </b-modal>
 
@@ -80,7 +80,7 @@ export default {
   },
   data(){
     return {
-    //  path: null,
+      //  path: null,
       items: [],
       itemSearch: '',
       selectedItem: null,
@@ -108,8 +108,8 @@ export default {
       console.log(this.tags)
       this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
       // console.log(this.tagFile, this.path, this.tags)
-       let params = {tagFile: this.tagFile, tags: this.tags}
-       this.$store.dispatch('solid/addTags', params)
+      let params = {tagFile: this.tagFile, tags: this.tags}
+      this.$store.dispatch('solid/addTags', params)
 
     },
     async getItems(query) {
@@ -165,7 +165,7 @@ export default {
 
 
       }
-          this.tags = []
+      this.tags = []
     },
     privacy(){
       this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"

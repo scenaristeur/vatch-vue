@@ -1,8 +1,19 @@
 <template>
   <div>
-    for {{ tag }}
+
     <b-form-select v-model="vocab" :options="vocab_select"></b-form-select>
     <b-form-select v-model="predicate" :options="predicate_select"></b-form-select>
+
+    <b-button size="sm" variant="outline-secondary"  :href="tag.object.concepturi" target="_blank">{{tag.object.match.text}}
+    </b-button>
+    <br>
+    <small><i>({{tag.object.label}} / {{tag.object.description }})</i></small>
+    <!-- {{ tag.object}} -->
+    <!-- <hr> -->
+    <!-- for {{ tag }} -->
+
+
+
 
   </div>
 </template>
@@ -46,6 +57,7 @@ export default {
       let voc = this.vocab.PREFIX.toUpperCase()
       this.predicate_select = Object.keys(this.$store.state.solid.vocabs[voc]).map(k => {return {value: this.$store.state.solid.vocabs[voc][k], text: k}  })
       //  this.predicate = this.predicate_select[0]
+      this.predicate_select = this.predicate_select.filter(x => x.text.toLowerCase() == x.text)
     },
   },
   computed:{

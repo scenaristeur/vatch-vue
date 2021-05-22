@@ -17,7 +17,7 @@
         </ul>
 
       </div>
-      <hr>
+      <!-- <hr> -->
       <!-- {{ things }} -->
       <!-- <b-img v-if="src.length > 0" :src="src" width="425px"/>
       <b-textarea v-else v-model="content" rows="20" cols="50">

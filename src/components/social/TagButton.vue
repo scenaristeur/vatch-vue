@@ -1,5 +1,5 @@
 <template>
-  <b-button @click="doTheTag">Tag this resource</b-button>
+  <b-button @click="doTheTag" size="sm" variant="outline-success">tag</b-button>
 </template>
 
 <script>
