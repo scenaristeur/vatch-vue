@@ -19,7 +19,7 @@
 
 
 
-      <Tags :tags="pod.publicTags" />
+      <!-- <Tags :tags="pod.publicTags" /> -->
 
 
 
@@ -42,7 +42,7 @@ export default {
     'Resource' :  () => import ( '@/components/storage/Resource' ),
     'Login': () => import('@/components/solid/Login'),
     'Profile': () => import('@/components/solid/Profile'),
-    'Tags': () => import('@/components/social/Tags')
+    // 'Tags': () => import('@/components/social/Tags')
   },
   methods:{
     async load(url){
