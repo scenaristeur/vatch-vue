@@ -68,7 +68,7 @@ export default {
       //     console.log(values,keys+"<br>")
       //   })
       // });
-      this.$store.commit('vatch/SetResourceToTag', null)
+      this.$store.commit('vatch/setResourceToTag', null)
 
       this.$bvModal.show('bv-modal-things')
     }

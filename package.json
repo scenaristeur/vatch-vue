@@ -10,7 +10,7 @@
     "postgit": "git push && git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
-    "@inrupt/solid-client": "^1.7.0",
+    "@inrupt/solid-client": "^1.8.0",
     "@inrupt/solid-client-authn-browser": "^1.8.1",
     "@inrupt/vocab-common-rdf": "^0.7.4",
     "@inrupt/vocab-inrupt-common": "^0.7.4",
@@ -39,8 +39,8 @@
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "babel-eslint": "^10.1.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-vue": "^6.2.2",
+    "eslint": "^7.27.0",
+    "eslint-plugin-vue": "^7.9.0",
     "vue-template-compiler": "^2.6.11"
   }
 }

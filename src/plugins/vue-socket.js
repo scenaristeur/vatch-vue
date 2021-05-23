@@ -32,8 +32,6 @@ const plugin = {
     });
 
     socket.on('watcher event', function(ressources) {
-
-      //  ressources.map(r => r.parts = r.path.split())
       console.log("Watcher event",ressources)
       store.commit("vatch/updateLocalResources", ressources)
     });

@@ -8,7 +8,7 @@ export default {
   props: ['path'],
   methods:{
     doTheTag(){
-      this.$store.commit('vatch/SetResourceToTag', this.path)
+      this.$store.commit('vatch/setResourceToTag', this.path)
     }
   }
 }

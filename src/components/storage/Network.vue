@@ -63,8 +63,9 @@ export default {
             console.log("input.value", n_id)
             let n = this.data.nodes.get(n_id);
             console.log("selected",n)
-            console.log("socket",this.$socket)
+
             if (n.type == 'file'){
+
               this.$socket.emit('read file', {path: n.id});
               n.shape = "ellipse"
               this.data.nodes.update(n)
@@ -76,8 +77,8 @@ export default {
         }
       })
 
-      this.localResources = this.$store.state.vatch.localResources
-      console.log(this.localResources)
+      // this.localResources = this.$store.state.vatch.localResources
+      // console.log(this.localResources)
 
     },
     methods:{
@@ -165,8 +166,8 @@ export default {
           id: item.path, label:label, color:color, type: 'file', group: "file"
         }])
         this.linkContainer(item)
-        if (label.startsWith('#')){
-          this.$socket.emit('read file', {path: item.path});
+        if (label.startsWith('_')){
+          this.$socket.emit('read file', {path: item.path, callback: 'vatch/processMetaFile'});
         }
 
       },
@@ -224,13 +225,11 @@ export default {
     },
     watch:{
       localResources(){
-        console.log("Resources in network",this.localResources)
         this.process(this.localResources)
       },
       networkAdds(){
-        console.log(this.networkAdds)
         this.networkAdds.nodes != undefined ? this.data.nodes.update(this.networkAdds.nodes) : ""
-        this.networkAdds.edges != undefined ? this.data.edges.update(this.networkAdds.edges) :  ""
+        this.networkAdds.edges != undefined ? this.data.edges.update(this.networkAdds.edges) : ""
       }
     },
     computed:{

@@ -24,15 +24,6 @@ import {
 } from "@inrupt/solid-client";
 import { FOAF, /*RDF, LDP,*/ VCARD } from "@inrupt/vocab-common-rdf";
 import { WS, /*, VCARD */} from "@inrupt/vocab-solid-common";
-// import {
-//   // handleIncomingRedirect,
-//   //  login,
-//   //fetch,
-//   // getDefaultSession,
-//   //  onSessionRestore,
-//   /* getSessionIdFromStorageAll,*/
-//   /*getSessionFromStorage */
-// } from '@inrupt/solid-client-authn-browser'
 import * as sc from '@inrupt/solid-client-authn-browser'
 import * as jsonld from 'jsonld';
 
@@ -96,7 +87,7 @@ const plugin = {
             let publicTagFile = pod.storage+'public/tags.ttl'
             //let privateTagFile = podStorage+'private/tags.ttl'
             let tags = await this.$getTags(publicTagFile)
-            console.log("tags",tags)
+            console.log("############################tags",tags)
           }
         }else{
           store.commit('solid/setPod', null)
@@ -159,6 +150,7 @@ const plugin = {
     Vue.prototype.$getPodInfos = async function(pod){
       try{
         const dataset = await getSolidDataset( pod.webId, { fetch: sc.fetch });
+        console.log("DATASET", dataset)
         let profile = await getThing( dataset, pod.webId );
         pod.name = await getStringNoLocale(profile, FOAF.name);
         pod.friends = await getUrlAll(profile, FOAF.knows).map(webId => {return {webId: webId}})
@@ -184,6 +176,7 @@ const plugin = {
         console.log("tags RDF",tagsR)
 
         const tagDataset = await getSolidDataset( tagFile, { fetch: sc.fetch });
+        console.log("DATASET", tagDataset)
         let things =  await getThingAll(tagDataset, tagFile);
         console.log(things)
 
@@ -200,6 +193,7 @@ const plugin = {
       let tagDataset
       try{
         tagDataset = await getSolidDataset(params.tagFile, {fetch: sc.fetch});
+        console.log("DATASET", tagDataset)
       }catch(e){
         //  console.log(e)
       }
@@ -340,7 +334,7 @@ const plugin = {
       try{
 
         let dataset = await getSolidDataset(url, { fetch: sc.fetch });
-        //    console.log(dataset)
+         console.log(dataset)
         await dataset._quads.forEach(async function (q)  {
           let [s,p,o] = [
             {id:q.subject.id, label: await lastPart(q.subject.id)},

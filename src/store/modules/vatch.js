@@ -19,7 +19,16 @@ const state = () => ({
 })
 
 const actions = {
-
+  processMetaFile(context,file){
+    try{
+      let graph = JSON.parse(file.content)
+      graph.path = file.path
+      context.commit('addToNetwork', graph)
+    }catch(e){
+      console.log(file, "->", e)
+      alert(e+" in "+file.path)
+    }
+  }
 }
 
 const mutations = {
@@ -41,7 +50,6 @@ const mutations = {
     state.pathsep = p
   },
   updateLocalResources(state, r){
-    console.log(r)
     state.localResources = r
   },
   addChatMessage(state, m){
@@ -50,7 +58,7 @@ const mutations = {
   setFile(state, f){
     state.file = f
   },
-  SetResourceToTag(state, r){
+  setResourceToTag(state, r){
     state.resourceToTag = r
   },
   addToNetwork(state,n){
