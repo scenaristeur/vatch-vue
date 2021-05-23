@@ -109,7 +109,7 @@ export default {
       this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
       console.log(this.tagFile, this.path, this.tags)
       let params = {tagFile: this.tagFile, path: this.path, tags: this.tags}
-      this.$store.dispatch('solid/addTags', params)
+      this.$addTags(params)
 
 
     },

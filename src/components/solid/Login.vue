@@ -39,16 +39,16 @@ export default {
     }
   },
   created(){
-    this.$store.dispatch('solid/checkSessions', {restore: this.restore})
+    this.$checkSessions({restore: this.restore})
   },
   methods:{
     login(){
       if (this.issuer != null){
-        this.$store.dispatch('solid/login', this.issuer)
+        this.$login(this.issuer)
       }
     },
     logout(){
-      this.$store.dispatch('solid/logout', {restore: this.restore})
+      this.$logout({restore: this.restore})
     }
   },
   computed:{

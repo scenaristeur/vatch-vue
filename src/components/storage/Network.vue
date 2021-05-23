@@ -229,8 +229,8 @@ export default {
       },
       networkAdds(){
         console.log(this.networkAdds)
-        this.data.nodes.update(this.networkAdds.nodes)
-        this.data.edges.update(this.networkAdds.edges)
+        this.networkAdds.nodes != undefined ? this.data.nodes.update(this.networkAdds.nodes) : ""
+        this.networkAdds.edges != undefined ? this.data.edges.update(this.networkAdds.edges) :  ""
       }
     },
     computed:{

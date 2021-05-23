@@ -33,7 +33,7 @@ components :  {
 },
 methods:{
   async loadResource(){
-    this.$store.dispatch('solid/setCurrentThingUrl', this.resource)
+    this.$setCurrentThingUrl(this.resource)
   },
   openContext(){
     this.$refs.ctxMenu.open()
@@ -46,7 +46,7 @@ methods:{
       answer = confirm("Are you sure you want to delete "+this.resource);
       if (answer == true)
       {
-        this.$store.dispatch('solid/deleteOnPod', this.resource)
+        this.$deleteOnPod(this.resource)
       }
 
 

@@ -37,7 +37,7 @@
 
   <b-list-group>
     <b-list-group-item v-for="t in tags" :key="t.id" button>
-      <VocabSelector :tag='t' @selected="update" />
+      <VocabSelector :tag_init='t' @selected="update" />
     </b-list-group-item>
 
   </b-list-group>
@@ -104,7 +104,7 @@ export default {
       this.tagFile = this.pod.storage+this.privacy+"/tags.ttl"
       // console.log(this.tagFile, this.path, this.tags)
       let params = {tagFile: this.tagFile, tags: this.tags}
-      this.$store.dispatch('solid/addTags', params)
+      this.$addTags(params)
 
     },
     async getItems(query) {

@@ -46,7 +46,7 @@ export default {
   },
   methods:{
     async load(url){
-      this.$store.dispatch('solid/setCurrentThingUrl', url)
+      this.$setCurrentThingUrl(url)
     },
     parent(url){
       url = url.endsWith('/') ? url.slice(0, -1) : url;
@@ -57,7 +57,7 @@ export default {
       console.log(saisie);
       if(saisie !== null && saisie.length > 0){
         let dest = this.currentRemoteUrl.endsWith('/') ? this.currentRemoteUrl : this.parent(this.currentRemoteUrl)
-        this.$store.dispatch('solid/createFile', {dest: dest, filename: saisie})
+        this.$createFile({dest: dest, filename: saisie})
       }
 
 
@@ -67,7 +67,7 @@ export default {
       console.log(saisie);
       if(saisie !== null && saisie.length > 0){
         let dest = this.currentRemoteUrl.endsWith('/') ? this.currentRemoteUrl : this.parent(this.currentRemoteUrl)
-        this.$store.dispatch('solid/createFolder', {dest: dest, foldername: saisie})
+        this.$createFolder({dest: dest, foldername: saisie})
       }
     }
   },

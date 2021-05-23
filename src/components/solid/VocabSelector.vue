@@ -21,9 +21,9 @@
 <script>
 export default {
   name:'VocabSelector',
-  props: ['tag'],
+  props: ['tag_init'],
   created(){
-
+    this.tag = this.tag_init
     this.vocab_select = Object.keys(this.$store.state.solid.vocabs).map(k => {return {value: this.$store.state.solid.vocabs[k], text: k}  })
     console.log("SELECT VOCABS", this.vocab_select)
     this.vocab = this.$store.state.solid.vocabs.FOAF

@@ -1,22 +1,22 @@
 import {
   getSolidDataset,
   getThingAll,
-  // getFile,
-  // isRawData,
-  // getContentType,
-  // saveFileInContainer,
-  // getContainedResourceUrlAll,
-  // createContainerAt,
-  // getSourceUrl,
-  //  deleteFile,
-  //   deleteContainer,
+  getFile,
+  isRawData,
+  getContentType,
+  saveFileInContainer,
+  getContainedResourceUrlAll,
+  createContainerAt,
+  getSourceUrl,
+  deleteFile,
+  deleteContainer,
   //  addStringNoLocale,
-  // setThing,
-  // saveSolidDatasetAt,
-  // createSolidDataset,
-  // createThing,
-  // addUrl,
-  // overwriteFile,
+  setThing,
+  saveSolidDatasetAt,
+  createSolidDataset,
+  createThing,
+  addUrl,
+  overwriteFile,
   getStringNoLocale,
   getThing,
   getUrlAll,
@@ -40,6 +40,121 @@ import * as jsonld from 'jsonld';
 const plugin = {
   install(Vue, opts = {}) {
     let store = opts.store
+
+    Vue.prototype.$login= async function(issuer) {
+
+      try{
+        await sc.login({
+          oidcIssuer: issuer,
+          redirectUrl: window.location.href,
+          clientName: "Vatch",
+        });
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    Vue.prototype.$logout = async function(params){
+      try{
+        let session = sc.getDefaultSession()
+        console.log(params)
+        await session.logout()
+        store.commit('solid/setSession',session)
+        store.commit('solid/setPod', {})
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    Vue.prototype.$checkSessions = async function( params){
+      try{
+        await sc.handleIncomingRedirect({restorePreviousSession : params.restore}).then((info) => {
+          console.log(info)
+        })
+        let session = sc.getDefaultSession()
+        sc.onSessionRestore((url) => {
+          console.log("restore",url)
+        });
+        store.commit('solid/setSession',session)
+        //  dispatch('getPodInfos', session)
+        this.$getPodInfosFromSession(session)
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    Vue.prototype.$getPodInfosFromSession = async function(session){
+      try{
+        let pod = {}
+        pod.logged = session.info.isLoggedIn
+        if (pod.logged) {
+          pod.webId = session.info.webId
+          pod = await this.$getPodInfos(pod)
+          store.commit('solid/setPod', pod)
+          if (pod.storage != null){
+            this.$setCurrentThingUrl(pod.storage)
+            let publicTagFile = pod.storage+'public/tags.ttl'
+            //let privateTagFile = podStorage+'private/tags.ttl'
+            let tags = await this.$getTags(publicTagFile)
+            console.log("tags",tags)
+          }
+        }else{
+          store.commit('solid/setPod', null)
+          store.commit('solid/setThings', [])
+        }
+      } catch(e){
+        alert(e)
+      }
+    }
+
+    Vue.prototype.$setCurrentThingUrl = async function( url){
+      try{
+        const file = await getFile(url, {fetch: sc.fetch});
+        // file is a Blob (see https://developer.mozilla.org/docs/Web/API/Blob)
+        console.log(
+          `Fetched a ${getContentType(file)} file from ${getSourceUrl(file)}.`
+        );
+        console.log(`The file is ${isRawData(file) ? "not " : ""}a dataset.`);
+
+        store.commit('solid/setCurrentRemoteUrl',url)
+
+        if(isRawData(file)){
+          console.log("todo raw data", file)
+          var reader = new FileReader();
+          reader.addEventListener("loadend", function() {
+            console.log(reader)
+            //  console.log(reader.result)
+            store.commit('vatch/setFile', {
+              path: getSourceUrl(file),
+              content : reader.result,
+              type:{mime: getContentType(file)}
+            }, { root: true })
+            // reader.result contient le contenu du
+            // blob sous la forme d'un tableau typé
+          });
+          reader.readAsText(file);
+        }else{
+          const myDataset = await getSolidDataset( url, {fetch: sc.fetch});
+          console.log(myDataset)
+
+          let resources = await getContainedResourceUrlAll(myDataset,{fetch: sc.fetch} )
+          console.log("Resources", resources)
+          if(resources.length > 0){
+            store.commit('solid/setRemoteResources',resources)
+          }else{
+            const things = await getThingAll(
+              myDataset,
+              url
+            );
+            store.commit('solid/setThings',things)
+          }
+        }
+      }
+      catch(e){
+        alert(e)
+      }
+
+    },
 
     Vue.prototype.$getPodInfos = async function(pod){
       try{
@@ -77,6 +192,147 @@ const plugin = {
         return []
       }
     }
+
+
+    Vue.prototype.$addTags = async function(params){
+      //console.log(params)
+
+      let tagDataset
+      try{
+        tagDataset = await getSolidDataset(params.tagFile, {fetch: sc.fetch});
+      }catch(e){
+        //  console.log(e)
+      }
+
+      //  console.log(tagDataset)
+      tagDataset== undefined || tagDataset== null ? tagDataset = createSolidDataset() :""
+
+      let thing, thingInDs;
+      //thing = addUrl(thing, RDF.type, LDP.Resource);
+      params.tags.forEach((t) => {
+        console.log("add",t.subject, t.predicate.value, t.object.concepturi )
+        //  console.log(thing == undefined || thing ==null, thing)
+        //thing == undefined || thing ==null ?  thing = getThing(tagDataset, params.tagFile+"#"+t.subject) : ""
+        thing == undefined || thing ==null ?  thing = getThing(tagDataset, t.subject) : ""
+        //  console.log(thing)
+        //  thing == null ? thing = createThing({name: t.subject}) : ""
+        thing == null ? thing = createThing({url: t.subject}) : ""
+        //  console.log(thing)
+        thing = addUrl(thing, t.predicate.value, t.object.concepturi);
+
+      });
+      thingInDs = setThing(tagDataset, thing);
+
+
+      let savedThing = await saveSolidDatasetAt(params.tagFile, thingInDs, { fetch: sc.fetch } );
+      console.log("File saved",savedThing);
+    },
+
+    Vue.prototype.$uploadLocalToPod = async function(params){
+      try{
+        console.log(params)
+
+        if(params.dest == undefined){
+          alert ("Please select a destination")
+          return
+        }
+
+
+        let type = params.type && params.type.mime || "plain/text"
+        let distIsDirectory = params.dest.endsWith('/')
+        let srcIsDirectory = params.event == "addDir"
+
+        if (srcIsDirectory){
+          console.info("todo src is directory")
+        }else{
+
+          if(distIsDirectory){
+            params.parts == undefined ? params.parts = params.path.split(store.state.vatch.pathsep) : ""
+            let slug = encodeURIComponent(params.parts.pop())
+            const savedFile = await saveFileInContainer(
+              params.dest,
+              new Blob([params.content], { type: type }),
+              { slug: slug, fetch: sc.fetch }
+            );
+
+            console.log(`File saved at ${getSourceUrl(savedFile)}`);
+            this.$setCurrentThingUrl(params.dest)
+          }else{
+
+            let answer = confirm("Are you sure you want to replace "+params.dest);
+            if (answer == true)
+            {
+              const savedFile = await overwriteFile(
+                params.dest,
+                new Blob([params.content], { type: type }),
+                { fetch: sc.fetch }
+                // Or in Node:
+                // Buffer.from("This is a plain piece of text", "utf8"), { type: "plain/text" })
+              );
+              console.log("File saved!", savedFile);
+            }
+          }
+        }
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    Vue.prototype.$createFile = async function(params){
+      try{
+        let type = params.type && params.type.mime || "plain/text"
+        let slug = encodeURIComponent(params.filename)
+        const savedFile = await saveFileInContainer(
+          params.dest,
+          new Blob([params.content || ""], { type: type }),
+          { slug: slug, fetch: sc.fetch }
+        );
+        console.log(`File saved at ${getSourceUrl(savedFile)}`);
+        this.$setCurrentThingUrl(params.dest)
+      } catch(e){
+        alert(e)
+      }
+    },
+
+    Vue.prototype.$createFolder = async function(params){
+      try{
+        let url = params.dest+encodeURIComponent(params.foldername)
+        const savedFolder = await createContainerAt(url, {fetch: sc.fetch});
+        console.log(`Folder saved at ${getSourceUrl(savedFolder)}`);
+        this.$setCurrentThingUrl(params.dest)
+      } catch(e){
+        alert(e)
+      }
+    },
+
+
+    Vue.prototype.$deleteOnPod = async function(url){
+      try{
+        if(url.endsWith('/')){
+          await deleteContainer(
+            url, { fetch: sc.fetch }
+          );
+        }
+        else{
+          await deleteFile(
+            url, { fetch: sc.fetch }
+          );
+        }
+        console.log(" deleted !",url);
+        let parent = url.slice(0, url.lastIndexOf('/'))+'/';
+        console.log("parent",parent)
+        this.$setCurrentThingUrl(parent)
+      } catch(e){
+        alert(e)
+      }
+
+    }
+
+
+
+    ////////////////////////////
+
+
 
     async function parseTagsRdf(url){
       let graph = {nodes: [], edges: []}
