@@ -26,7 +26,7 @@
     methods: {
       save(){
         this.$bvModal.hide('bv-modal-exditor')
-        if(this.path.startsWith(this.pod.storage)){
+        if(this.pod != null && this.path.startsWith(this.pod.storage)){
           this.$store.dispatch('solid/uploadLocalToPod', {dest: this.path, content: this.content})
         }else{
           this.$socket.emit('write file', {path: this.path, content: this.content});

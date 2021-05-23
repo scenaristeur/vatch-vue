@@ -80,23 +80,32 @@ const plugin = {
 
     async function parseTagsRdf(url){
       let graph = {nodes: [], edges: []}
-      let dataset = await getSolidDataset(url, { fetch: sc.fetch });
-      //    console.log(dataset)
-      await dataset._quads.forEach(async function (q)  {
-        let [s,p,o] = [
-          {id:q.subject.id, label: await lastPart(q.subject.id)},
-          q.predicate.id,
-          {id:q.object.id, label: await lastPart(q.object.id)}
-        ]
-        //  console.log(s,p,o)
-        var indexS = graph.nodes.findIndex(x => x.id==s.id);
-        indexS === -1 ? graph.nodes.push(s) : "" //console.log("object already exists")
-        var indexO = graph.nodes.findIndex(x => x.id==o.id);
-        indexO === -1 ? graph.nodes.push(o) : "" //console.log("object already exists")
-        let edge = {from: s.id, to: o.id, label: await lastPart(p)}
-        var indexP = graph.edges.findIndex(x => x.from==edge.from && x.to == edge.to && x.label == edge.label);
-        indexP === -1 ? graph.edges.push(edge) : ""//console.log("object already exists")
-      });
+      console.log("parseTagsRdf",url)
+      try{
+
+        let dataset = await getSolidDataset(url, { fetch: sc.fetch });
+        //    console.log(dataset)
+        await dataset._quads.forEach(async function (q)  {
+          let [s,p,o] = [
+            {id:q.subject.id, label: await lastPart(q.subject.id)},
+            q.predicate.id,
+            {id:q.object.id, label: await lastPart(q.object.id)}
+          ]
+          //  console.log(s,p,o)
+          var indexS = graph.nodes.findIndex(x => x.id==s.id);
+          indexS === -1 ? graph.nodes.push(s) : "" //console.log("object already exists")
+          var indexO = graph.nodes.findIndex(x => x.id==o.id);
+          indexO === -1 ? graph.nodes.push(o) : "" //console.log("object already exists")
+          let edge = {from: s.id, to: o.id, label: await lastPart(p)}
+          var indexP = graph.edges.findIndex(x => x.from==edge.from && x.to == edge.to && x.label == edge.label);
+          indexP === -1 ? graph.edges.push(edge) : ""//console.log("object already exists")
+        });
+      }
+      catch(e){
+        console.log(e)
+      }
+
+      console.log(graph)
       return graph
     }
 
@@ -128,11 +137,11 @@ const plugin = {
 
       if (text.startsWith(wikidata)){
         let splitext = text.split(wikidata)[1]
-      //  console.log(splitext)
+        //  console.log(splitext)
         //  try{
         let search_url = API_URL+"&ids="+splitext+"&props=labels&languages="+language
         const res = await fetch(search_url)
-      //  console.log(res)
+        //  console.log(res)
         const json = await res.json()
         // console.log(suggestions)
         let label

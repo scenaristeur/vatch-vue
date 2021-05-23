@@ -228,7 +228,7 @@ export default {
         this.process(this.localResources)
       },
       networkAdds(){
-        console.log(this.addToNetwork)
+        console.log(this.networkAdds)
         this.data.nodes.update(this.networkAdds.nodes)
         this.data.edges.update(this.networkAdds.edges)
       }
