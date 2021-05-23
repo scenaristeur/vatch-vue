@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d222392"],{ce60:function(t,e,n){"use strict";n.r(e);var o=function(){var t=this,e=t.$createElement,n=t._self._c||e;return n("b-button",{attrs:{size:"sm",variant:"outline-success"},on:{click:t.doTheTag}},[t._v("tag")])},s=[],a={name:"TagButton",props:["path"],methods:{doTheTag:function(){this.$store.commit("vatch/SetResourceToTag",this.path)}}},c=a,u=n("2877"),i=Object(u["a"])(c,o,s,!1,null,null,null);e["default"]=i.exports}}]);
+//# sourceMappingURL=chunk-2d222392.36daf26c.js.map
