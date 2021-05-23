@@ -10,8 +10,8 @@ const plugin = {
     //let socket = Vue.prototype.$socket = io('http://localhost:3000');
     // share your localhost storage on your localnetwork
     console.log("window.location",window.location)
-    window.location == "https://scenaristeur.github.io/vatch-vue/" ? console.info("connecting to your local filesystem through socket.io") : console.info("sharing your local filesystem to your local network through socket.io")
-    let server = window.location == "https://scenaristeur.github.io/vatch-vue/" ? 'http://localhost:3000' : ':3000'
+    window.location.startsWith("https://scenaristeur.github.io/vatch-vue/") ? console.info("connecting to your local filesystem through socket.io") : console.info("sharing your local filesystem to your local network through socket.io")
+    let server = window.location.startsWith("https://scenaristeur.github.io/vatch-vue/") ? 'http://localhost:3000' : ':3000'
 
     let socket = Vue.prototype.$socket = io(server);
 
