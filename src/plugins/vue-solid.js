@@ -25,6 +25,9 @@ import {
 import { FOAF, /*RDF, LDP,*/ VCARD } from "@inrupt/vocab-common-rdf";
 import { WS, /*, VCARD */} from "@inrupt/vocab-solid-common";
 import * as sc from '@inrupt/solid-client-authn-browser'
+import {
+  WebsocketNotification,
+} from "@inrupt/solid-client-notifications";
 import * as jsonld from 'jsonld';
 
 
@@ -158,6 +161,7 @@ const plugin = {
         pod.photo = await getUrl(profile, VCARD.hasPhoto);
         pod.publicTags = await this.$getTags(pod.storage+'public/tags.ttl')
         store.commit("vatch/addToNetwork", pod.publicTags)
+        //this.$subscribe(pod.storage)
         console.log("getpodinfos",pod)
       }catch(e)
       {
@@ -322,6 +326,16 @@ const plugin = {
 
     }
 
+    Vue.prototype.$subscribe = async function(resourceURL){
+      const websocket = new WebsocketNotification(
+        resourceURL,
+        { fetch: sc.fetch }
+      );
+
+      websocket.on("message", console.log);
+
+      websocket.connect();
+    }
 
 
     ////////////////////////////
@@ -334,7 +348,7 @@ const plugin = {
       try{
 
         let dataset = await getSolidDataset(url, { fetch: sc.fetch });
-         console.log(dataset)
+        console.log(dataset)
         await dataset._quads.forEach(async function (q)  {
           let [s,p,o] = [
             {id:q.subject.id, label: await lastPart(q.subject.id)},
@@ -393,7 +407,6 @@ const plugin = {
         const res = await fetch(search_url)
         //  console.log(res)
         const json = await res.json()
-        // console.log(suggestions)
         let label
         try{
           label = json.entities[splitext].labels[language] != undefined ? json.entities[splitext].labels[language].value : json.entities[splitext].labels.en.value
