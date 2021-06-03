@@ -1,6 +1,7 @@
+import Vue from 'vue';
   import * as common from "@inrupt/vocab-common-rdf";
   import * as inrupt from "@inrupt/vocab-inrupt-common"
-  import * as solid from "@inrupt/vocab-solid-common"
+import * as solid from "@inrupt/vocab-solid-common"
 
   const state = () => ({
     session: null,
@@ -17,7 +18,18 @@
   })
 
   const actions = {
-
+    uploadLocalToPod(context,file){
+      try{
+        console.log(file)
+        Vue.prototype.$uploadLocalToPod(file)
+        // let graph = JSON.parse(file.content)
+        // graph.path = file.path
+        // context.commit('addToNetwork', graph)
+      }catch(e){
+        console.log(file, "->", e)
+        alert(e+" in "+file.path)
+      }
+    }
   }
 
   const mutations = {

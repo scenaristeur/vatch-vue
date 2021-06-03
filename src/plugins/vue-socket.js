@@ -42,6 +42,7 @@ const plugin = {
     });
 
     socket.on('cat file', function(file) {
+      console.log(file)
       if(file.callback != undefined){
         store.dispatch(file.callback, file)
       }else{

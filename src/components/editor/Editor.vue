@@ -4,7 +4,12 @@
     <template #modal-title>
       Editor   ... <a href="https://scenaristeur.github.io/ipgs/about" target="_blank">WAnt to CReate BIg MindMaps ? TRy Ipgs</a>
     </template>
+
+    <EditorNetwork v-if="network != null" :net="network" />
+
+
     <b-img v-if="src.length > 0" :src="src" width="425px"/>
+
       <b-textarea v-else v-model="content" rows="20" cols="50">
       </b-textarea>
 
@@ -16,16 +21,20 @@
   <script>
   export default {
     name: 'Editor',
+    components :  {
+      'EditorNetwork' :  () => import ( '@/components/editor/EditorNetwork' )
+    },
     data(){
       return {
         path: "",
         content: "",
-        src: ""
+        src: "",
+        network:null
       }
     },
     methods: {
       save(){
-        this.$bvModal.hide('bv-modal-exditor')
+      //  this.$bvModal.hide('bv-modal-editor')
         if(this.pod != null && this.path.startsWith(this.pod.storage)){
           this.$uploadLocalToPod({dest: this.path, content: this.content})
         }else{
@@ -52,6 +61,7 @@
         if (msg.type == undefined){
           msg.ext = msg.path.split('.').pop()
         }
+        this.network = null
         this.$bvModal.show('bv-modal-editor')
         this.path = msg.path
         this.content = msg.content
@@ -61,6 +71,21 @@
         }else{
           console.log(msg)
         }
+
+        if(msg.type == 'application/json' || msg.ext == "json" || msg.ext=="jsonld"){
+          console.log("json")
+          let data = JSON.parse(msg.content)
+          if(data.nodes != undefined || data.edges != undefined){
+            console.log(data)
+            this.network = data
+          }
+
+
+
+        }
+
+
+
       }
     },
     watch:{

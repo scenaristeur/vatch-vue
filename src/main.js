@@ -6,9 +6,11 @@ import store from './store'
 
 import VueSocket from './plugins/vue-socket';
 import VueSolid from './plugins/vue-solid';
+import VueVis from './plugins/vue-vis';
 
 Vue.use(VueSocket, {store: store});
 Vue.use(VueSolid, {store: store});
+Vue.use(VueVis, {store: store});
 
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'

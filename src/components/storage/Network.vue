@@ -82,48 +82,9 @@ export default {
 
     },
     methods:{
-
-      /**
-      * Extract given field from items array and return unique values in an array
-      */
-      fieldFromItems(items, field) {
-        var tmpHash = {};
-        for (var n in items) {
-          tmpHash[items[n][field]] = true;
-        }
-
-        return Object.keys(tmpHash);
-      },
-
-
-      collectGroups() {
-        var items = this.data.nodes.get({
-          fields: ['group']
-        });
-        return this.fieldFromItems(items, 'group');
-      },
-
       clusterByGroup(){
-        // Determine all distinct group id's
-        var groups = this.collectGroups();
-
-        // Cluster per group
-        for (var n in groups) {
-          var group = groups[n];
-
-          this.network.cluster({
-            joinCondition: function(item) {
-              return item.group == group;
-            },
-            clusterNodeProperties: {
-              label: 'Group ' + group,
-              borderWidth: 3,
-              shape: "database",
-              color: 'orange'
-            }
-          });
-        }
-
+        console.log("clu")
+        this.$clusterByGroup(this.network)
       },
 
       process(msg){
