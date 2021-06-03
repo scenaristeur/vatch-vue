@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "0813dc388b1232902859",
+    "revision": "77370cec7f2c7b2c423b",
     "url": "/vatch-vue/css/app.054eddbb.css"
   },
   {
@@ -16,7 +16,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/css/chunk-vendors.1d5dfc9b.css"
   },
   {
-    "revision": "9d0a558a950e9839d92bcd42c43b2099",
+    "revision": "ea0be79c9e9696ac023607e53585f88f",
     "url": "/vatch-vue/index.html"
   },
   {
@@ -24,8 +24,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/js/about.2acbefb3.js"
   },
   {
-    "revision": "0813dc388b1232902859",
-    "url": "/vatch-vue/js/app.5a4d0156.js"
+    "revision": "77370cec7f2c7b2c423b",
+    "url": "/vatch-vue/js/app.22b4b390.js"
   },
   {
     "revision": "31fa31fdac973d0b4cd9",
@@ -52,8 +52,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/vatch-vue/js/chunk-2d0c4a87.3441668f.js"
   },
   {
-    "revision": "bcce3d7e5a355bae6f12",
-    "url": "/vatch-vue/js/chunk-2d0c7cf2.d6e07ded.js"
+    "revision": "0c85e30d46484875fc36",
+    "url": "/vatch-vue/js/chunk-2d0c7cf2.333c0325.js"
   },
   {
     "revision": "2790c5ce5da2aaa1af29",

@@ -2,7 +2,7 @@
   <div  class="mb-4">
 
     <div v-if="pod != null">
-
+      <!-- <Websocket /> -->
       <b-button-toolbar aria-label="Toolbar with button groups and input groups">
         <b-button-group size="sm" class="mr-1" style="width:100%">
           <b-button @click="load(pod.storage)"><b-icon icon="arrow90deg-up" aria-hidden="true"></b-icon></b-button>
@@ -42,6 +42,7 @@ export default {
     'Resource' :  () => import ( '@/components/storage/Resource' ),
     'Login': () => import('@/components/solid/Login'),
     'Profile': () => import('@/components/solid/Profile'),
+  //  'Websocket': () => import('@/components/solid/Websocket'),
     // 'Tags': () => import('@/components/social/Tags')
   },
   methods:{

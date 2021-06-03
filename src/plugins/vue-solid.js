@@ -327,12 +327,47 @@ const plugin = {
     }
 
     Vue.prototype.$subscribe = async function(resourceURL){
+
+      const gateway = "https://notification.pod.inrupt.com/";
+
       const websocket = new WebsocketNotification(
         resourceURL,
-        { fetch: sc.fetch }
+        { fetch: sc.fetch, gateway }
       );
+      console.log("Subscription to", resourceURL)
+      websocket.on("connected", () =>
+      console.log("connected", websocket)
+      // setMessages((prev) => [
+      //   ...prev,
+      //   `Websocket connected; watching ${podRoot}`,
+      // ])
+    );
 
-      websocket.on("message", console.log);
+    websocket.on("message", (message) =>
+    {
+      console.log('message', JSON.parse(message))
+    }
+      // setMessages((prev) => [...prev, formatMessage(message)])
+    );
+
+    websocket.on("closed", () =>
+    console.log("websocket closed")
+    //  setMessages((prev) => [...prev, "Websocket closed"])
+    );
+
+    websocket.on("error", (error) => {
+      /* eslint no-console: 0 */
+      console.error(error);
+      // setMessages((prev) => [
+      //   ...prev,
+      //   "Websocket error (see console for details)",
+      // ]);
+    });
+
+      // websocket.on("message", console.log);
+      // websocket.on("*", console.log);
+      // websocket.on("connect", console.log);
+      // websocket.on("CREATE", console.log);
 
       websocket.connect();
     }
