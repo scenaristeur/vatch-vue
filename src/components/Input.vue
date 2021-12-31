@@ -1,32 +1,37 @@
 <template>
   <form id="form" action="">
-    <input id="input" v-model="input" autocomplete="off" /><button>Send</button>
+    'data/path_to_folder/' to create a new folder"<br>
+    'data/path_to_file.ext' to create a new file"
+    <input id="input"
+    autofocus
+    v-model="input"
+    autocomplete="off" /><button>Send</button>
   </form>
 </template>
 
 <script>
 export default {
-name: 'Input',
-mounted(){
-  let app = this
-//  let messages = document.getElementById('messages');
-  let form = document.getElementById('form');
-  let input = document.getElementById('input');
+  name: 'Input',
+  mounted(){
+    let app = this
+    //  let messages = document.getElementById('messages');
+    let form = document.getElementById('form');
+    let input = document.getElementById('input');
 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (input.value) {
-      app.$socket.emit('chat message', input.value);
-      input.value = '';
-    }
-  });
-},
-computed:{
-  input:{
-    get () { return this.$store.state.vatch.input},
-    set (/*value*/) { /*this.updateTodo(value)*/ }
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input.value) {
+        app.$socket.emit('chat message', input.value);
+        input.value = '';
+      }
+    });
   },
-}
+  computed:{
+    input:{
+      get () { return this.$store.state.vatch.input},
+      set (/*value*/) { /*this.updateTodo(value)*/ }
+    },
+  }
 
 }
 </script>

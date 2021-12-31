@@ -2,16 +2,13 @@
   <div class="hello">
     <h4>{{ msg }}</h4>
     <b-container class="mb-5">
-
       <b-row>
         <b-col>
           <LocalBrowser />
-
         </b-col>
         <b-col>
           <PodStorage />
         </b-col>
-
       </b-row>
       <Network />
     </b-container>

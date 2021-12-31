@@ -12,11 +12,11 @@
           <b-button v-b-modal.bv-modal-profile><b-icon icon="person-circle" aria-hidden="true"></b-icon></b-button>
         </b-button-group>
         <b-button-group>
-          <b-form-input v-model="currentRemoteUrl" class="text-right" ></b-form-input>
+
 
         </b-button-group>
       </b-button-toolbar>
-
+      <b-form-input v-model="currentRemoteUrl" class="text-right" ></b-form-input>
 
 
       <!-- <Tags :tags="pod.publicTags" /> -->
