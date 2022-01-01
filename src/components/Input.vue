@@ -1,7 +1,5 @@
 <template>
   <form id="form" action="">
-    'data/path_to_folder/' to create a new folder"<br>
-    'data/path_to_file.ext' to create a new file"
     <input id="input"
     autofocus
     v-model="input"
