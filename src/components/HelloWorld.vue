@@ -7,6 +7,10 @@
           <LocalBrowser />
         </b-col>
         <b-col>
+        <PassportPassword />
+
+
+
           <PodStorage />
         </b-col>
       </b-row>
@@ -36,7 +40,8 @@ export default {
     'LocalBrowser' :  () => import ( '@/components/storage/LocalBrowser' ),
     'Input' :  () => import ( '@/components/Input' ),
     'Editor' :  () => import ( '@/components/editor/Editor' ),
-    'Tag' :  () => import ( '@/components/social/Tag' )
+    'Tag' :  () => import ( '@/components/social/Tag' ),
+    'PassportPassword' :  () => import ( '@/views/passport/PassportPassword' )
 
   }
 }

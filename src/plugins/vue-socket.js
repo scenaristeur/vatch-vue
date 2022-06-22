@@ -59,9 +59,14 @@ const plugin = {
 
     socket.on('connect', () => {
       store.commit("vatch/setUser", socket.id)
+      socket.emit('whoami', (username) => {
+        // usernameSpan.innerText = username;
+        store.commit("vatch/setUsername", username)
+      });
     });
     socket.on('disconnect', () => {
       store.commit("vatch/setUser", null)
+      store.commit("vatch/setUsername", null)
     });
 
   },

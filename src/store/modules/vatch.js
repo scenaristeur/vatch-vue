@@ -9,6 +9,7 @@ const state = () => ({
   //  podResources: {},
   netWork: {},
   user: null,
+  username: null,
   chatMessages : [],
   file: {},
   //  webId: null,
@@ -42,6 +43,10 @@ const mutations = {
   setUser(state, u){
     console.log(u)
     state.user = u
+  },
+  setUsername(state, u_n){
+    console.log(u_n)
+    state.username = u_n
   },
   setUsers(state, u){
     state.users = u
